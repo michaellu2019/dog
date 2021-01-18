@@ -33,23 +33,6 @@ def setup():
     time.sleep(1.0)
 
 def loop():
-    """
-    MIN_Z = 75.0
-    MAX_Z = 110.0
-    
-    pos[2] += vel[2]
-    if pos[2] < MIN_Z:
-        vel[2] = 0.5
-        pos[2] = MIN_Z
-    if pos[2] > MAX_Z:
-        vel[2] = -0.5
-        pos[2] = MAX_Z
-    
-    z = pos[2]
-    c = math.acos(float(z)**2/(2 * LEG_LEN**2) - 1) * 180/math.pi
-    b = (180.0 - c)/2
-    print(z, c, b)
-    """
     pos = input_pos()
     move_ik(pos)
     
