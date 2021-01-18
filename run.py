@@ -41,35 +41,32 @@ def move_ik(pos):
     y = pos[1]
     z = pos[2]
     
-    z2 = z
-    shoulder_angle1 = math.atan(x/z2)
-    z3 = z2/math.cos(shoulder_angle1)
+    hip_angle = math.atan(y/z)
+    z1 = z/math.cos(hip_angle)
     
-    knee_angle = math.acos(z3**2/(2 * LEG_LEN**2) - 1)
+    shoulder_angle1 = math.atan(x/z1)
+    z2 = z1/math.cos(shoulder_angle1)
+    
+    knee_angle = math.acos(z2**2/(2 * LEG_LEN**2) - 1)
     shoulder_angle2 = (math.pi - knee_angle)/2
-    #print(shoulder_angle1 * (180.0/math.pi), shoulder_angle2 * (180.0/math.pi))
     
+    hip_angle = 90.0 + hip_angle * (180.0/math.pi)
     shoulder_angle = (shoulder_angle1 + shoulder_angle2) * (180.0/math.pi)
     knee_angle = knee_angle * (180.0/math.pi)
     
-    print('IK1:', pos, [shoulder_angle, knee_angle])
+    leg_angles = [knee_angle, shoulder_angle, hip_angle]
+    print('IK:', pos, leg_angles)
     
-    write_servo(servo_channels[0][0], knee_angle)
-    write_servo(servo_channels[0][1], shoulder_angle)
-    write_servo(servo_channels[2][0], knee_angle)
-    write_servo(servo_channels[2][1], shoulder_angle)
-    
-    write_servo(servo_channels[1][0], knee_angle)
-    write_servo(servo_channels[1][1], shoulder_angle)
-    write_servo(servo_channels[3][0], knee_angle)
-    write_servo(servo_channels[3][1], shoulder_angle)
+    for i in range(NUM_LEGS):
+        for j in range(NUM_LEG_SERVOS):
+            write_servo(servo_channels[i][j], leg_angles[j])
     
     
 def write_servo(channel, angle):
-    if abs(90 - angle) > 60:
+    if (channel in {2, 6, 10, 14} and abs(90.0 - angle) > 15.0) or abs(90.0 - angle) > 60.0:
         raise ValueError("Dangerous servo angle!")
     
-    if channel in {4, 5, 6, 12, 13, 14}:
+    if channel in {4, 5, 12, 13}:
         angle = 180 - angle
     pulse_val = int(MIN_SERVO_PULSE + (angle/180.0) * (MAX_SERVO_PULSE - MIN_SERVO_PULSE))
     pwm.set_pwm(channel, 0, pulse_val)
