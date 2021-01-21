@@ -12,8 +12,11 @@ MAX_SERVO_PULSE = 650
 NUM_LEGS = 4
 NUM_LEG_SERVOS = 3
 LEG_LEN = 63 # millimeters
+BODY_LEN = 153
+BODY_WID = 112
 
 pos = [0.0, 0.0, 89.0]
+rot = [0.0, 0.0, 0.0]
 vel = [0.0, 0.0, 0.5]
 
 servo_channels = [[0, 1, 2], [4, 5, 6], [8, 9, 10], [12, 13, 14]]
@@ -34,32 +37,74 @@ def setup():
 
 def loop():
     pos = input_pos()
-    move_ik(pos)
+    rot = input_rot()
     
-def move_ik(pos):
-    x = pos[0]
-    y = pos[1]
-    z = pos[2]
+    for i in range(NUM_LEGS):
+        move_ik(i, pos, rot)
     
-    hip_angle = math.atan(y/z)
-    z1 = z/math.cos(hip_angle)
+def move_ik(leg_id, pos, rot):
+    x, y, z = pos
+    roll, pitch, yaw = [angle * (math.pi/180.0) for angle in rot]
     
-    shoulder_angle1 = math.atan(x/z1)
-    z2 = z1/math.cos(shoulder_angle1)
+    x2 = x
+    y2 = y
     
+    # pitch
+    if leg_id <= 1:
+        pitch *= -1
+        x2 *= -1
+    
+    pitch_diff_z = z + math.sin(pitch) * BODY_LEN/2.0
+    pitch_diff_x = x2 + (BODY_LEN/2.0 - math.cos(pitch) * BODY_LEN/2.0)
+        
+    pitch_small_shoulder_angle = math.atan(pitch_diff_x/pitch_diff_z)
+    pitch_leg_len = pitch_diff_z/math.cos(pitch_small_shoulder_angle)
+    
+    pitch_shoulder_angle = pitch + pitch_small_shoulder_angle
+        
+    pitch_z = pitch_leg_len * math.cos(pitch_shoulder_angle)
+    pitch_x = pitch_leg_len * math.sin(pitch_shoulder_angle)
+    
+    if leg_id <= 1:
+        pitch_x *= -1
+    
+    # roll
+    if leg_id == 1 or leg_id == 3:
+        roll *= -1
+        y2 *= -1
+        
+    roll_diff_z = pitch_z + math.sin(roll) * BODY_WID/2.0
+    roll_diff_y = y2 + (BODY_WID/2.0 - math.cos(roll) * BODY_WID/2.0)
+    
+    roll_small_hip_angle = math.atan(roll_diff_y/roll_diff_z)
+    roll_leg_len = roll_diff_z/math.cos(roll_small_hip_angle)
+    
+    roll_hip_angle = roll + roll_small_hip_angle
+    
+    roll_z = roll_leg_len * math.cos(roll_hip_angle)
+    roll_y = roll_leg_len * math.sin(roll_hip_angle)
+    
+    # y
+    hip_angle = math.atan(roll_y/roll_z)
+    z1 = roll_z/math.cos(hip_angle)
+    
+    # x
+    y_shoulder_angle = math.atan(pitch_x/z1)
+    z2 = z1/math.cos(y_shoulder_angle)
+    
+    # z
     knee_angle = math.acos(z2**2/(2 * LEG_LEN**2) - 1)
-    shoulder_angle2 = (math.pi - knee_angle)/2
+    z_shoulder_angle = (math.pi - knee_angle)/2
     
     hip_angle = 90.0 + hip_angle * (180.0/math.pi)
-    shoulder_angle = (shoulder_angle1 + shoulder_angle2) * (180.0/math.pi)
+    shoulder_angle = (y_shoulder_angle + z_shoulder_angle) * (180.0/math.pi)
     knee_angle = knee_angle * (180.0/math.pi)
     
     leg_angles = [knee_angle, shoulder_angle, hip_angle]
-    print('IK:', pos, leg_angles)
+    print(leg_id, 'IK:', pos, leg_angles)
     
-    for i in range(NUM_LEGS):
-        for j in range(NUM_LEG_SERVOS):
-            write_servo(servo_channels[i][j], leg_angles[j])
+    for i in range(NUM_LEG_SERVOS):
+        write_servo(servo_channels[leg_id][i], leg_angles[i])
     
     
 def write_servo(channel, angle):
@@ -82,6 +127,15 @@ def input_pos():
 
     time.sleep(1.0)
     return [x, y, z]
+
+def input_rot():
+    roll = float(input("Input Roll:"))
+    pitch = float(input("Input Pitch:"))
+    yaw = float(input("Input Yaw:"))
+    print("Rot:", [roll, pitch, yaw])
+
+    time.sleep(1.0)
+    return [roll, pitch, yaw]
     
 setup()
 
