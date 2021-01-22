@@ -46,16 +46,50 @@ def move_ik(leg_id, pos, rot):
     x, y, z = pos
     roll, pitch, yaw = [angle * (math.pi/180.0) for angle in rot]
     
-    x2 = x
-    y2 = y
+    # yaw
+    leg_x = -x
+    leg_y = -y
+    
+    if leg_id == 0:
+        leg_x += BODY_LEN/2.0
+        leg_y += BODY_WID/2.0
+    elif leg_id == 1:
+        leg_x += BODY_LEN/2.0
+        leg_y -= BODY_WID/2.0
+    elif leg_id == 2:
+        leg_x -= BODY_LEN/2.0
+        leg_y += BODY_WID/2.0
+    elif leg_id == 3:
+        leg_x -= BODY_LEN/2.0
+        leg_y -= BODY_WID/2.0
+    
+    leg_angle = math.atan(leg_y/leg_x)
+    leg_radius = leg_y/math.sin(leg_angle);
+    yaw_angle = yaw + leg_angle
+    
+    yaw_x = leg_radius * math.cos(yaw_angle)
+    yaw_y = leg_radius * math.sin(yaw_angle)
+    
+    if leg_id == 0:
+        yaw_x -= BODY_LEN/2.0
+        yaw_y -= BODY_WID/2.0
+    elif leg_id == 1:
+        yaw_x -= BODY_LEN/2.0
+        yaw_y += BODY_WID/2.0
+    elif leg_id == 2:
+        yaw_x += BODY_LEN/2.0
+        yaw_y -= BODY_WID/2.0
+    elif leg_id == 3:
+        yaw_x += BODY_LEN/2.0
+        yaw_y += BODY_WID/2.0
     
     # pitch
     if leg_id <= 1:
         pitch *= -1
-        x2 *= -1
+        yaw_x *= -1
     
     pitch_diff_z = z + math.sin(pitch) * BODY_LEN/2.0
-    pitch_diff_x = x2 + (BODY_LEN/2.0 - math.cos(pitch) * BODY_LEN/2.0)
+    pitch_diff_x = yaw_x + (BODY_LEN/2.0 - math.cos(pitch) * BODY_LEN/2.0)
         
     pitch_small_shoulder_angle = math.atan(pitch_diff_x/pitch_diff_z)
     pitch_leg_len = pitch_diff_z/math.cos(pitch_small_shoulder_angle)
@@ -71,10 +105,10 @@ def move_ik(leg_id, pos, rot):
     # roll
     if leg_id == 1 or leg_id == 3:
         roll *= -1
-        y2 *= -1
+        yaw_y *= -1
         
-    roll_diff_z = pitch_z + math.sin(roll) * BODY_WID/2.0
-    roll_diff_y = y2 + (BODY_WID/2.0 - math.cos(roll) * BODY_WID/2.0)
+    roll_diff_z = pitch_z - math.sin(roll) * BODY_WID/2.0
+    roll_diff_y = (BODY_WID/2.0 - math.cos(roll) * BODY_WID/2.0) - yaw_y
     
     roll_small_hip_angle = math.atan(roll_diff_y/roll_diff_z)
     roll_leg_len = roll_diff_z/math.cos(roll_small_hip_angle)
@@ -84,16 +118,19 @@ def move_ik(leg_id, pos, rot):
     roll_z = roll_leg_len * math.cos(roll_hip_angle)
     roll_y = roll_leg_len * math.sin(roll_hip_angle)
     
+    if leg_id == 1 or leg_id == 3:
+        roll_y *= -1
+    
     # y
     hip_angle = math.atan(roll_y/roll_z)
-    z1 = roll_z/math.cos(hip_angle)
+    y_trans_z = roll_z/math.cos(hip_angle)
     
     # x
-    y_shoulder_angle = math.atan(pitch_x/z1)
-    z2 = z1/math.cos(y_shoulder_angle)
+    y_shoulder_angle = math.atan(pitch_x/y_trans_z)
+    x_trans_z = y_trans_z/math.cos(y_shoulder_angle)
     
     # z
-    knee_angle = math.acos(z2**2/(2 * LEG_LEN**2) - 1)
+    knee_angle = math.acos(x_trans_z**2/(2 * LEG_LEN**2) - 1)
     z_shoulder_angle = (math.pi - knee_angle)/2
     
     hip_angle = 90.0 + hip_angle * (180.0/math.pi)
