@@ -1,9 +1,11 @@
 import time
 import math
-import keyboard
+import curses
 
 import Adafruit_PCA9685
 import RPi.GPIO as GPIO
+
+run_program = True
 
 pwm = Adafruit_PCA9685.PCA9685()
 
@@ -25,22 +27,41 @@ servo_neutral_vals = [[90, 45, 90], [90, 45, 90], [90, 45, 90], [90, 45, 90]];
 servo_vals = [[servo_neutral_vals[i][j] for j in range(NUM_LEG_SERVOS)] for i in range(NUM_LEGS)]
 pwm.set_pwm_freq(60)
 
+screen = curses.initscr()
+curses.noecho()
+curses.cbreak()
+screen.keypad(True)
+
 def setup():
-    print("Configuring all servos...");
+    curses_log("Configuring all servos...")
     for i in range(NUM_LEGS):
         for j in range(NUM_LEG_SERVOS):
-            print("Configuring Servo", i, j)
+            curses_log("Configuring Servo " + str(i) + " " + str(j))
             write_servo(servo_channels[i][j], servo_neutral_vals[i][j])
             time.sleep(1.0)
-    print("Servo configuration complete...")
+    curses_log("Servo configuration complete...")
     time.sleep(1.0)
 
 def loop():
+    """
     pos = input_pos()
     rot = input_rot()
     
     for i in range(NUM_LEGS):
         move_ik(i, pos, rot)
+    """
+    char = screen.getch()
+    if char == curses.KEY_UP:
+        curses_log("UP")
+        curses_log(str(pos))
+        curses_log(str(rot))
+    elif char == curses.KEY_DOWN:
+        curses_log("DOWN")
+    elif char == ord("q"):
+        curses_log("ESCAPE")
+        return False
+
+    return True
     
 def move_ik(leg_id, pos, rot):
     x, y, z = pos
@@ -138,7 +159,7 @@ def move_ik(leg_id, pos, rot):
     knee_angle = knee_angle * (180.0/math.pi)
     
     leg_angles = [knee_angle, shoulder_angle, hip_angle]
-    print(leg_id, 'IK:', pos, leg_angles)
+    # print(leg_id, 'IK:', pos, leg_angles)
     
     for i in range(NUM_LEG_SERVOS):
         write_servo(servo_channels[leg_id][i], leg_angles[i])
@@ -152,9 +173,6 @@ def write_servo(channel, angle):
         angle = 180 - angle
     pulse_val = int(MIN_SERVO_PULSE + (angle/180.0) * (MAX_SERVO_PULSE - MIN_SERVO_PULSE))
     pwm.set_pwm(channel, 0, pulse_val)
-
-def move_servo():
-    pass
 
 def input_pos():
     x = float(input("Input X:"))
@@ -173,15 +191,24 @@ def input_rot():
 
     time.sleep(1.0)
     return [roll, pitch, yaw]
+
+def curses_log(msg):
+    screen.addstr(msg + "\n")
+    screen.refresh()
     
 setup()
 
 try:
-    while True:
-        loop()
+    while run_program:
+        run_program = loop()
         time.sleep(0.01)
 finally:
+    print("EXIT")
     GPIO.cleanup()
+    curses.nocbreak()
+    screen.keypad(0)
+    curses.echo()
+    curses.endwin()
 
 """
 while True:
