@@ -19,7 +19,6 @@ BODY_WID = 112
 
 pos = [0.0, 0.0, 89.0]
 rot = [0.0, 0.0, 0.0]
-vel = [0.0, 0.0, 0.5]
 
 servo_channels = [[0, 1, 2], [4, 5, 6], [8, 9, 10], [12, 13, 14]]
 #servo_neutral_vals = [[90, 90, 90], [90, 90, 90], [90, 90, 90], [90, 90, 90]];
@@ -33,6 +32,9 @@ curses.cbreak()
 screen.keypad(True)
 
 def setup():
+    global pos
+    global rot
+    
     curses_log("Configuring all servos...")
     for i in range(NUM_LEGS):
         for j in range(NUM_LEG_SERVOS):
@@ -41,6 +43,8 @@ def setup():
             time.sleep(1.0)
     curses_log("Servo configuration complete...")
     time.sleep(1.0)
+    screen.clear()
+    screen.refresh()
 
 def loop():
     """
@@ -51,17 +55,83 @@ def loop():
         move_ik(i, pos, rot)
     """
     char = screen.getch()
-    if char == curses.KEY_UP:
-        curses_log("UP")
-        curses_log(str(pos))
-        curses_log(str(rot))
-    elif char == curses.KEY_DOWN:
-        curses_log("DOWN")
-    elif char == ord("q"):
-        curses_log("ESCAPE")
-        return False
+    speed = 0.5
+    if char > 0:
+        screen.clear()
+        
+        if char == ord("q"):
+            curses_log("Escape")
+            move("pos", [-pos[0], -pos[1], -pos[2] + 89.0])
+            move("rot", [-rot[0], -rot[1], -rot[2]])
+            return False
+        
+        if char == ord(" "):
+            curses_log("Reset")
+            move("pos", [-pos[0], -pos[1], -pos[2] + 89.0])
+            move("rot", [-rot[0], -rot[1], -rot[2]])
+            
+        if char == ord("o"):
+            curses_log("Pitch Up")
+            move("rot", [0.0, -speed, 0.0])
+        elif char == ord("l"):
+            curses_log("Pitch Down")
+            move("rot", [0.0, speed, 0.0])
+        if char == ord("k"):
+            curses_log("Yaw Left")
+            move("rot", [0.0, 0.0, speed])
+        elif char == ord(";"):
+            curses_log("Yaw Right")
+            move("rot", [0.0, 0.0, -speed])
+        if char == ord("i"):
+            curses_log("Roll Up")
+            move("rot", [speed, 0.0, 0.0])
+        if char == ord("p"):
+            curses_log("Roll Down")
+            move("rot", [-speed, 0.0, 0.0])
+            
+            
+        if char == ord("w"):
+            curses_log("Move Forward")
+            move("pos", [speed, 0.0, 0.0])
+        elif char == ord("s"):
+            curses_log("Move Backward")
+            move("pos", [-speed, 0.0, 0.0])
+        if char == ord("a"):
+            curses_log("Move Left")
+            move("pos", [0.0, -speed, 0.0])
+        elif char == ord("d"):
+            curses_log("Move Right")
+            move("pos", [0.0, speed, 0.0])
+        if char == ord("r"):
+            curses_log("Move Up")
+            move("pos", [0.0, 0.0, speed])
+        if char == ord("f"):
+            curses_log("Move Down")
+            move("pos", [0.0, 0.0, -speed])
+            
 
     return True
+
+def move(move_type, vel):
+    if move_type == "pos":
+        pos[0] += float(vel[0])
+        pos[1] += float(vel[1])
+        pos[2] += float(vel[2])
+    elif move_type == "rot":
+        rot[0] += float(vel[0])
+        rot[1] += float(vel[1])
+        rot[2] += float(vel[2])
+    
+    curses_log("Position: " + str(tuple(pos)))
+    curses_log("Rotation: " + str(tuple(rot)))
+    
+    for i in range(NUM_LEGS):
+        move_ik(i, pos, rot)
+    
+def rotate(ang_vel):
+    pos[0] += float(ang_vel[0])
+    pos[1] += float(ang_vel[1])
+    pos[2] += float(ang_vel[2])
     
 def move_ik(leg_id, pos, rot):
     x, y, z = pos
