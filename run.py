@@ -126,7 +126,10 @@ def move(move_type, vel):
     curses_log("Rotation: " + str(tuple(rot)))
     
     for i in range(NUM_LEGS):
-        move_ik(i, pos, rot)
+        try:
+            move_ik(i, pos, rot)
+        except ValueError:
+            print("Error!")
     
 def rotate(ang_vel):
     pos[0] += float(ang_vel[0])
@@ -236,8 +239,14 @@ def move_ik(leg_id, pos, rot):
     
     
 def write_servo(channel, angle):
-    if (channel in {2, 6, 10, 14} and abs(90.0 - angle) > 15.0) or abs(90.0 - angle) > 60.0:
-        raise ValueError("Dangerous servo angle!")
+    MAX_SHOULDER_ANGLE = 35.0
+    MAX_LEG_ANGLE = 60.0
+    if channel in {2, 6, 10, 14} and abs(90.0 - angle) > MAX_SHOULDER_ANGLE:
+        angle = 90.0 - MAX_SHOULDER_ANGLE
+        raise ValueError("Dangerous shoulder servo angle!")
+    if channel in {0, 4, 8, 12} and abs(90.0 - angle) > MAX_LEG_ANGLE:
+        angle = 90.0 - MAX_LEG_ANGLE
+        raise ValueError("Dangerous leg servo angle!")
     
     if channel in {4, 5, 12, 13}:
         angle = 180 - angle
@@ -271,7 +280,7 @@ setup()
 try:
     while run_program:
         run_program = loop()
-        time.sleep(0.01)
+        # time.sleep(0.01)
 finally:
     print("EXIT")
     GPIO.cleanup()
