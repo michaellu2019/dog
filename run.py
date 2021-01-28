@@ -22,7 +22,7 @@ rot = [0.0, 0.0, 0.0]
 
 servo_channels = [[0, 1, 2], [4, 5, 6], [8, 9, 10], [12, 13, 14]]
 #servo_neutral_vals = [[90, 90, 90], [90, 90, 90], [90, 90, 90], [90, 90, 90]];
-servo_neutral_vals = [[90, 45, 90], [90, 45, 90], [90, 45, 90], [90, 45, 90]];
+servo_neutral_vals = [[90, 45, 90], [90, 45, 90], [90, 45, 90], [90, 45, 90]]; # leg: [foot, knee, shoulder]
 servo_vals = [[servo_neutral_vals[i][j] for j in range(NUM_LEG_SERVOS)] for i in range(NUM_LEGS)]
 pwm.set_pwm_freq(60)
 
@@ -130,6 +130,10 @@ def move(move_type, vel):
     
     error = False
     for i in range(NUM_LEGS):
+        move_ik(i, pos, rot)
+        
+        """
+        This code still caused a fire so maybe don't use it?
         try:
             move_ik(i, pos, rot)
         except ValueError:
@@ -145,6 +149,7 @@ def move(move_type, vel):
             except ValueError:
                 curses_log("Error! Dangerous orientation for servos! Fire!!!")
                 break
+        """
     
     
 def rotate(ang_vel):
