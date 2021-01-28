@@ -113,6 +113,9 @@ def loop():
     return True
 
 def move(move_type, vel):
+    prev_pos = pos
+    prev_rot = rot
+    
     if move_type == "pos":
         pos[0] += float(vel[0])
         pos[1] += float(vel[1])
@@ -125,11 +128,24 @@ def move(move_type, vel):
     curses_log("Position: " + str(tuple(pos)))
     curses_log("Rotation: " + str(tuple(rot)))
     
+    error = False
     for i in range(NUM_LEGS):
         try:
             move_ik(i, pos, rot)
         except ValueError:
-            print("Error!")
+            curses_log("Error! Dangerous orientation for servos! Fire!!!")
+            error = True
+            break
+        
+    if error:
+        curses_log("Returning to previous orientation!")
+        for i in range(NUM_LEGS):
+            try:
+                move_ik(i, prev_pos, prev_rot)
+            except ValueError:
+                curses_log("Error! Dangerous orientation for servos! Fire!!!")
+                break
+    
     
 def rotate(ang_vel):
     pos[0] += float(ang_vel[0])
@@ -239,8 +255,8 @@ def move_ik(leg_id, pos, rot):
     
     
 def write_servo(channel, angle):
-    MAX_SHOULDER_ANGLE = 35.0
-    MAX_LEG_ANGLE = 60.0
+    MAX_SHOULDER_ANGLE = 30.0
+    MAX_LEG_ANGLE = 55.0
     if channel in {2, 6, 10, 14} and abs(90.0 - angle) > MAX_SHOULDER_ANGLE:
         angle = 90.0 - MAX_SHOULDER_ANGLE
         raise ValueError("Dangerous shoulder servo angle!")
