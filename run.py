@@ -19,6 +19,7 @@ BODY_WID = 112
 
 pos = [0.0, 0.0, 89.0]
 rot = [0.0, 0.0, 0.0]
+mode = "standing"
 
 servo_channels = [[0, 1, 2], [4, 5, 6], [8, 9, 10], [12, 13, 14]]
 #servo_neutral_vals = [[90, 90, 90], [90, 90, 90], [90, 90, 90], [90, 90, 90]];
@@ -47,13 +48,7 @@ def setup():
     screen.refresh()
 
 def loop():
-    """
-    pos = input_pos()
-    rot = input_rot()
-    
-    for i in range(NUM_LEGS):
-        move_ik(i, pos, rot)
-    """
+    global mode
     char = screen.getch()
     speed = 0.5
     if char > 0:
@@ -66,48 +61,67 @@ def loop():
             return False
         
         if char == ord(" "):
+            mode = "standing"
             curses_log("Reset")
             move("pos", [-pos[0], -pos[1], -pos[2] + 89.0])
             move("rot", [-rot[0], -rot[1], -rot[2]])
-            
-        if char == ord("o"):
-            curses_log("Pitch Up")
-            move("rot", [0.0, -speed, 0.0])
-        elif char == ord("l"):
-            curses_log("Pitch Down")
-            move("rot", [0.0, speed, 0.0])
-        if char == ord("k"):
-            curses_log("Yaw Left")
-            move("rot", [0.0, 0.0, speed])
-        elif char == ord(";"):
-            curses_log("Yaw Right")
-            move("rot", [0.0, 0.0, -speed])
-        if char == ord("i"):
-            curses_log("Roll Up")
-            move("rot", [speed, 0.0, 0.0])
-        if char == ord("p"):
-            curses_log("Roll Down")
-            move("rot", [-speed, 0.0, 0.0])
-            
-            
-        if char == ord("w"):
-            curses_log("Move Forward")
-            move("pos", [speed, 0.0, 0.0])
-        elif char == ord("s"):
-            curses_log("Move Backward")
-            move("pos", [-speed, 0.0, 0.0])
-        if char == ord("a"):
-            curses_log("Move Left")
-            move("pos", [0.0, -speed, 0.0])
-        elif char == ord("d"):
-            curses_log("Move Right")
-            move("pos", [0.0, speed, 0.0])
-        if char == ord("r"):
-            curses_log("Move Up")
-            move("pos", [0.0, 0.0, speed])
-        if char == ord("f"):
-            curses_log("Move Down")
-            move("pos", [0.0, 0.0, -speed])
+        
+        if mode == "standing":
+            if char == ord("o"):
+                curses_log("Pitch Up")
+                move("rot", [0.0, -speed, 0.0])
+            elif char == ord("l"):
+                curses_log("Pitch Down")
+                move("rot", [0.0, speed, 0.0])
+            if char == ord("k"):
+                curses_log("Yaw Left")
+                move("rot", [0.0, 0.0, speed])
+            elif char == ord(";"):
+                curses_log("Yaw Right")
+                move("rot", [0.0, 0.0, -speed])
+            if char == ord("i"):
+                curses_log("Roll Up")
+                move("rot", [speed, 0.0, 0.0])
+            if char == ord("p"):
+                curses_log("Roll Down")
+                move("rot", [-speed, 0.0, 0.0])
+                
+                
+            if char == ord("w"):
+                curses_log("Move Forward")
+                move("pos", [speed, 0.0, 0.0])
+            elif char == ord("s"):
+                curses_log("Move Backward")
+                move("pos", [-speed, 0.0, 0.0])
+            if char == ord("a"):
+                curses_log("Move Left")
+                move("pos", [0.0, -speed, 0.0])
+            elif char == ord("d"):
+                curses_log("Move Right")
+                move("pos", [0.0, speed, 0.0])
+            if char == ord("r"):
+                curses_log("Move Up")
+                move("pos", [0.0, 0.0, speed])
+            if char == ord("f"):
+                curses_log("Move Down")
+                move("pos", [0.0, 0.0, -speed])
+        
+        if mode == "walking":
+            if char == ord("w"):
+                curses_log("Walk Forward")
+            elif char == ord("s"):
+                curses_log("Walk Backward")
+            if char == ord("a"):
+                curses_log("Walk Left")
+            elif char == ord("d"):
+                curses_log("Walk Right")
+        
+        if char == curses.KEY_ENTER or char == 10 or char == 13:
+            mode = "walking" if mode == "standing" else "standing"
+            curses_log("Changed Mode to " + mode[0].upper() + mode[1:])
+            curses_log("Reset")
+            move("pos", [-pos[0], -pos[1], -pos[2] + 89.0])
+            move("rot", [-rot[0], -rot[1], -rot[2]])
             
 
     return True
