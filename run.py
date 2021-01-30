@@ -5,6 +5,8 @@ import curses
 import Adafruit_PCA9685
 import RPi.GPIO as GPIO
 
+import vector
+
 run_program = True
 
 pwm = Adafruit_PCA9685.PCA9685()
@@ -123,7 +125,8 @@ def loop():
         if mode == "walking":
             if char == ord("w"):
                 curses_log("Walk Forward")
-                if abs(gait_pos[0][0] - gait_dest[0][0]) < 1e-6 and abs(gait_pos[0][1] - gait_dest[0][1]) < 1e-6 and abs(gait_pos[0][2] - gait_dest[0][2]) < 1e-6:
+                # if abs(gait_pos[0][0] - gait_dest[0][0]) < 1e-6 and abs(gait_pos[0][1] - gait_dest[0][1]) < 1e-6 and abs(gait_pos[0][2] - gait_dest[0][2]) < 1e-6:
+                if vector.eq(gait_pos[0], gait_dest[0]):
                     gait_pos[0] = gait_dest[0]
                     gait_states[0] += 1
                     if gait_states[0] >= len(gait):
@@ -132,8 +135,10 @@ def loop():
                     gait_src[0] = gait_dest[0]
                     gait_dest[0] = gait[gait_states[0]]
                 
-                walk_speed = [(gait_dest[0][0] - gait_src[0][0])/gait_divs, (gait_dest[0][1] - gait_src[0][1])/gait_divs, (gait_dest[0][2] - gait_src[0][2])/gait_divs]
-                gait_pos[0] = [gait_pos[0][0] + walk_speed[0], gait_pos[0][1] + walk_speed[1], gait_pos[0][2] + walk_speed[2]]
+                # walk_speed = [(gait_dest[0][0] - gait_src[0][0])/gait_divs, (gait_dest[0][1] - gait_src[0][1])/gait_divs, (gait_dest[0][2] - gait_src[0][2])/gait_divs]
+                # gait_pos[0] = [gait_pos[0][0] + walk_speed[0], gait_pos[0][1] + walk_speed[1], gait_pos[0][2] + walk_speed[2]]
+                gait_vel = vector.scalar_div(vector.sub(gait_dest[0], gait_src[0]), gait_divs)
+                gait_pos[0] = vector.add(gait_pos[0], gait_vel)
                 curses_log(str(gait_pos))
                 move_ik(0, gait_pos[0], rot)
                 
@@ -343,7 +348,6 @@ setup()
 try:
     while run_program:
         run_program = loop()
-        # time.sleep(0.01)
 finally:
     print("EXIT")
     GPIO.cleanup()
@@ -351,15 +355,3 @@ finally:
     screen.keypad(0)
     curses.echo()
     curses.endwin()
-
-"""
-while True:
-    # Move servo on channel O between extremes.
-    pwm.set_pwm(0, 0, servo_min)
-    time.sleep(1)
-    pwm.set_pwm(0, 0, servo_max/2)
-    time.sleep(1)
-    pwm.set_pwm(0, 0, servo_max)
-    time.sleep(1)
-"""
-
