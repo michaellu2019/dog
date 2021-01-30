@@ -126,7 +126,7 @@ def loop():
                 curses_log("Walk Forward")
                 if vector.eq(gait_pos[0], gait_dest[0]):
                     gait_pos[0] = gait_dest[0]
-                    gait_states[0] = gait_states + 1 if gait_states[0] + 1 < len(gait) else 0
+                    gait_states[0] = gait_states[0] + 1 if gait_states[0] + 1 < len(gait) else 0
                     gait_src[0] = gait_dest[0]
                     gait_dest[0] = gait[gait_states[0]]
                 
