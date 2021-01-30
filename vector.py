@@ -23,7 +23,7 @@ def eq(a, b):
 def add(a, b):
 	check_vectors(a, b)
 
-	c = [0.0 for i in range(len(b))]
+	c = [0.0 for i in range(len(a))]
 	for i in range(len(a)):
 		c[i] = a[i] + b[i]
 	return c
@@ -31,7 +31,7 @@ def add(a, b):
 def sub(a, b):
 	check_vectors(a, b)
 
-	c = [0.0 for i in range(len(b))]
+	c = [0.0 for i in range(len(a))]
 	for i in range(len(a)):
 		c[i] = a[i] - b[i]
 	return c
@@ -39,7 +39,7 @@ def sub(a, b):
 def scalar_mult(a, x):
 	check_vector_scalar(a, x)
 
-	c = [0.0 for i in range(len(b))]
+	c = [0.0 for i in range(len(a))]
 	for i in range(len(a)):
 		c[i] = a[i] * x
 	return c
@@ -47,7 +47,7 @@ def scalar_mult(a, x):
 def scalar_div(a, x):
 	check_vector_scalar(a, x)
 
-	c = [0.0 for i in range(len(b))]
+	c = [0.0 for i in range(len(a))]
 	for i in range(len(a)):
 		c[i] = a[i]/x
 	return c
