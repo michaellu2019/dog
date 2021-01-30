@@ -157,12 +157,12 @@ def curses_log(msg):
 
 try:
 	setup()
-    while run_program:
-        run_program = loop()
+	while run_program:
+		run_program = loop()
 finally:
-    print("EXIT")
-    GPIO.cleanup()
-    curses.nocbreak()
-    screen.keypad(0)
-    curses.echo()
-    curses.endwin()
+	print("EXIT")
+	GPIO.cleanup()
+	curses.nocbreak()
+	screen.keypad(0)
+	curses.echo()
+	curses.endwin()
