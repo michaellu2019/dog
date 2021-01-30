@@ -1,3 +1,12 @@
+MIN_SERVO_PULSE = 100
+MAX_SERVO_PULSE = 650
+NUM_LEGS = 4
+NUM_LEG_SERVOS = 3
+LEG_LEN = 63.0 # all length float units in millimeters
+BODY_LEN = 153.0
+BODY_WID = 112.0
+DEFAULT_HEIGHT = 89.0
+
 def move(move_type, vel):
     prev_pos = pos
     prev_rot = rot
