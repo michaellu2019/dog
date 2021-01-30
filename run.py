@@ -6,7 +6,7 @@ import Adafruit_PCA9685
 import RPi.GPIO as GPIO
 
 import vector
-from movement.py import move, move_ik 
+from movement import move, move_ik 
 
 run_program = True
 
