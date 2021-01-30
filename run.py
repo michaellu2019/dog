@@ -2,7 +2,6 @@ import time
 import math
 import curses
 
-import Adafruit_PCA9685
 import RPi.GPIO as GPIO
 
 import vector
@@ -10,7 +9,6 @@ from movement import move, move_ik, write_servo
 
 run_program = True
 
-pwm = Adafruit_PCA9685.PCA9685()
 
 MIN_SERVO_PULSE = 100
 MAX_SERVO_PULSE = 650
