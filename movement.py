@@ -1,6 +1,7 @@
 import Adafruit_PCA9685
 
 pwm = Adafruit_PCA9685.PCA9685()
+pwm.set_pwm_freq(60)
 
 MIN_SERVO_PULSE = 100
 MAX_SERVO_PULSE = 650
