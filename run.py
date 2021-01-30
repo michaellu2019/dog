@@ -13,13 +13,24 @@ MIN_SERVO_PULSE = 100
 MAX_SERVO_PULSE = 650
 NUM_LEGS = 4
 NUM_LEG_SERVOS = 3
-LEG_LEN = 63 # millimeters
-BODY_LEN = 153
-BODY_WID = 112
+LEG_LEN = 63.0 # millimeters
+BODY_LEN = 153.0
+BODY_WID = 112.0
+DEFAULT_HEIGHT = 89.0
 
-pos = [0.0, 0.0, 89.0]
+STEP_SIZE = 20.0
+STEP_SPEED = 2.5
+
+pos = [0.0, 0.0, DEFAULT_HEIGHT]
 rot = [0.0, 0.0, 0.0]
 mode = "standing"
+
+gait = [[0.0, 0.0, DEFAULT_HEIGHT], [STEP_SIZE, 0.0, DEFAULT_HEIGHT], [STEP_SIZE/2, 0.0, DEFAULT_HEIGHT - 10.0]]#, [0.0, 0.0, DEFAULT_HEIGHT], [-STEP_SIZE, 0.0, DEFAULT_HEIGHT]]
+gait_states = [0, 0, 0, 0]
+gait_dest = [gait[1], gait[1], gait[1], gait[1]]
+gait_src = [gait[0], gait[0], gait[0], gait[0]]
+gait_pos = [gait[0], gait[0], gait[0], gait[0]]
+gait_divs = STEP_SIZE/STEP_SPEED
 
 servo_channels = [[0, 1, 2], [4, 5, 6], [8, 9, 10], [12, 13, 14]]
 #servo_neutral_vals = [[90, 90, 90], [90, 90, 90], [90, 90, 90], [90, 90, 90]];
@@ -33,8 +44,6 @@ curses.cbreak()
 screen.keypad(True)
 
 def setup():
-    global pos
-    global rot
     
     curses_log("Configuring all servos...")
     for i in range(NUM_LEGS):
@@ -48,7 +57,12 @@ def setup():
     screen.refresh()
 
 def loop():
+    global pos
+    global rot
     global mode
+    global gait_pos
+    global gait_states
+    
     char = screen.getch()
     speed = 0.5
     if char > 0:
@@ -56,14 +70,14 @@ def loop():
         
         if char == ord("q"):
             curses_log("Escape")
-            move("pos", [-pos[0], -pos[1], -pos[2] + 89.0])
+            move("pos", [-pos[0], -pos[1], -pos[2] + DEFAULT_HEIGHT])
             move("rot", [-rot[0], -rot[1], -rot[2]])
             return False
         
         if char == ord(" "):
             mode = "standing"
             curses_log("Reset")
-            move("pos", [-pos[0], -pos[1], -pos[2] + 89.0])
+            move("pos", [-pos[0], -pos[1], -pos[2] + DEFAULT_HEIGHT])
             move("rot", [-rot[0], -rot[1], -rot[2]])
         
         if mode == "standing":
@@ -109,6 +123,20 @@ def loop():
         if mode == "walking":
             if char == ord("w"):
                 curses_log("Walk Forward")
+                if abs(gait_pos[0][0] - gait_dest[0][0]) < 1e-6 and abs(gait_pos[0][1] - gait_dest[0][1]) < 1e-6 and abs(gait_pos[0][2] - gait_dest[0][2]) < 1e-6:
+                    gait_pos[0] = gait_dest[0]
+                    gait_states[0] += 1
+                    if gait_states[0] >= len(gait):
+                        gait_states[0] = 0
+                    
+                    gait_src[0] = gait_dest[0]
+                    gait_dest[0] = gait[gait_states[0]]
+                
+                walk_speed = [(gait_dest[0][0] - gait_src[0][0])/gait_divs, (gait_dest[0][1] - gait_src[0][1])/gait_divs, (gait_dest[0][2] - gait_src[0][2])/gait_divs]
+                gait_pos[0] = [gait_pos[0][0] + walk_speed[0], gait_pos[0][1] + walk_speed[1], gait_pos[0][2] + walk_speed[2]]
+                curses_log(str(gait_pos))
+                move_ik(0, gait_pos[0], rot)
+                
             elif char == ord("s"):
                 curses_log("Walk Backward")
             if char == ord("a"):
