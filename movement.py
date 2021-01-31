@@ -2,6 +2,8 @@ import math
 
 import Adafruit_PCA9685
 
+from constants import *
+
 pwm = Adafruit_PCA9685.PCA9685()
 pwm.set_pwm_freq(60)
 
