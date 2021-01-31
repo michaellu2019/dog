@@ -2,6 +2,8 @@ import math
 
 import Adafruit_PCA9685
 
+from run import servo_channels, servo_neutral_vals, servo_vals
+
 pwm = Adafruit_PCA9685.PCA9685()
 pwm.set_pwm_freq(60)
 
