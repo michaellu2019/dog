@@ -2,8 +2,6 @@ import math
 
 import Adafruit_PCA9685
 
-from run import servo_channels, servo_neutral_vals, servo_vals
-
 pwm = Adafruit_PCA9685.PCA9685()
 pwm.set_pwm_freq(60)
 
@@ -15,6 +13,8 @@ LEG_LEN = 63.0 # all length float units in millimeters
 BODY_LEN = 153.0
 BODY_WID = 112.0
 DEFAULT_HEIGHT = 89.0
+
+servo_channels = [[0, 1, 2], [4, 5, 6], [8, 9, 10], [12, 13, 14]]
 
 def move_ik(leg_id, pos, rot):
     x, y, z = pos
