@@ -5,7 +5,7 @@ import curses
 import RPi.GPIO as GPIO
 
 import vector
-from movement import move, move_ik, write_servo
+from movement import move_ik, write_servo
 
 run_program = True
 
@@ -147,6 +147,45 @@ def loop():
             move("rot", [-rot[0], -rot[1], -rot[2]])
             
     return True
+
+def move(move_type, vel):
+    prev_pos = pos
+    prev_rot = rot
+    
+    if move_type == "pos":
+        pos[0] += float(vel[0])
+        pos[1] += float(vel[1])
+        pos[2] += float(vel[2])
+    elif move_type == "rot":
+        rot[0] += float(vel[0])
+        rot[1] += float(vel[1])
+        rot[2] += float(vel[2])
+    
+    curses_log("Position: " + str(tuple(pos)))
+    curses_log("Rotation: " + str(tuple(rot)))
+    
+    error = False
+    for i in range(NUM_LEGS):
+        move_ik(i, pos, rot)
+        
+    """
+        This code still caused a fire so maybe don't use it?
+        try:
+            move_ik(i, pos, rot)
+        except ValueError:
+            curses_log("Error! Dangerous orientation for servos! Fire!!!")
+            error = True
+            break
+        
+    if error:
+        curses_log("Returning to previous orientation!")
+        for i in range(NUM_LEGS):
+            try:
+                move_ik(i, prev_pos, prev_rot)
+            except ValueError:
+                curses_log("Error! Dangerous orientation for servos! Fire!!!")
+                break
+    """
 
 def curses_log(msg):
     screen.addstr(msg + "\n")
