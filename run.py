@@ -114,7 +114,7 @@ def loop():
             move("rot", [-rot[0], -rot[1], -rot[2]])
 
     gait_grounded = all([gait_states[i] % 3 == 0 for i in range(NUM_LEGS)])
-    curses_log(str(gait_grounded) + " GAIT GROUDNED")
+    curses_log(str(gait_grounded) + " GAIT GROUDNED " + str([gait_states[i] % 3 == 0 for i in range(NUM_LEGS)]) + "--" + str(gait_states))
     if walking_mode == "forward" or not gait_grounded:
     	curses_log("Walking Forward")
         for i in range(NUM_LEGS):
