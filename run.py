@@ -177,12 +177,12 @@ def move(move_type, vel):
 
 def curses_log(msg):
     screen.addstr(msg + "\n")
-    screen.refresh(0.05)
+    screen.refresh()
 
 try:
 	setup()
 	while run_program:
-		run_program = loop()
+		run_program = loop(0.05)
 finally:
 	print("EXIT")
 	GPIO.cleanup()
