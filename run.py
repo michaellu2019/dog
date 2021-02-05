@@ -43,11 +43,11 @@ def loop(interval):
 
     time.sleep(interval)
     
-    screen.clear()
-    screen.refresh()
+    #screen.clear()
+    #screen.refresh()
     char = screen.getch()
-    speed = 0.5
     if char > 0:
+    	screen.clear()
         if char == ord("q"):
             curses_log("Escape")
             move("pos", [-pos[0], -pos[1], -pos[2] + DEFAULT_HEIGHT])
@@ -65,41 +65,41 @@ def loop(interval):
         if mode == "standing":
             if char == ord("o"):
                 curses_log("Pitch Up")
-                move("rot", [0.0, -speed, 0.0])
+                move("rot", [0.0, -STANDING_SPEED, 0.0])
             elif char == ord("l"):
                 curses_log("Pitch Down")
-                move("rot", [0.0, speed, 0.0])
+                move("rot", [0.0, STANDING_SPEED, 0.0])
             if char == ord("k"):
                 curses_log("Yaw Left")
-                move("rot", [0.0, 0.0, speed])
+                move("rot", [0.0, 0.0, STANDING_SPEED])
             elif char == ord(";"):
                 curses_log("Yaw Right")
-                move("rot", [0.0, 0.0, -speed])
+                move("rot", [0.0, 0.0, -STANDING_SPEED])
             if char == ord("i"):
                 curses_log("Roll Up")
-                move("rot", [speed, 0.0, 0.0])
+                move("rot", [STANDING_SPEED, 0.0, 0.0])
             if char == ord("p"):
                 curses_log("Roll Down")
-                move("rot", [-speed, 0.0, 0.0])
+                move("rot", [-STANDING_SPEED, 0.0, 0.0])
                 
             if char == ord("w"):
                 curses_log("Move Forward")
-                move("pos", [speed, 0.0, 0.0])
+                move("pos", [STANDING_SPEED, 0.0, 0.0])
             elif char == ord("s"):
                 curses_log("Move Backward")
-                move("pos", [-speed, 0.0, 0.0])
+                move("pos", [-STANDING_SPEED, 0.0, 0.0])
             if char == ord("a"):
                 curses_log("Move Left")
-                move("pos", [0.0, -speed, 0.0])
+                move("pos", [0.0, -STANDING_SPEED, 0.0])
             elif char == ord("d"):
                 curses_log("Move Right")
-                move("pos", [0.0, speed, 0.0])
+                move("pos", [0.0, STANDING_SPEED, 0.0])
             if char == ord("r"):
                 curses_log("Move Up")
-                move("pos", [0.0, 0.0, speed])
+                move("pos", [0.0, 0.0, STANDING_SPEED])
             if char == ord("f"):
                 curses_log("Move Down")
-                move("pos", [0.0, 0.0, -speed])
+                move("pos", [0.0, 0.0, -STANDING_SPEED])
         
         if mode == "walking":
             if char == ord("w"):
@@ -141,7 +141,7 @@ def loop(interval):
             gait_vel = vector.scalar_div(vector.sub(gait_dest[i], gait_src[i]), gait_divs)
             gait_pos[i] = vector.add(gait_pos[i], gait_vel)
             move_ik(i, gait_pos[i], rot)
-    	curses_log(str(gait_pos))      
+    	#curses_log(str(gait_pos))      
 
     return True
 
