@@ -106,6 +106,7 @@ def loop():
                 curses_log("Walk Right")
 
 	        gait_grounded = [gait_states[i] % 3 == 0 for i in range(NUM_LEGS)]
+	        curses_log(str(gait_grounded) + " GAIT GROUDNED")
 	        if walking_mode == "forward" or not gait_grounded:
 	        	curses_log("Walking Forward")
                 for i in range(NUM_LEGS):
