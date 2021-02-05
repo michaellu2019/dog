@@ -122,7 +122,7 @@ def loop(interval):
     gait_grounded = all([gait_pos[i][2] == DEFAULT_HEIGHT for i in range(NUM_LEGS)])
     curses_log(str(gait_grounded) + " GAIT GROUNDED " + str([gait_pos[i][2] == DEFAULT_HEIGHT for i in range(NUM_LEGS)]) + "--" + str([gait_pos[i][2] for i in range(NUM_LEGS)]))
     curses_log(walking_mode)
-    if walking_mode == "forward":
+    if walking_mode == "forward" and not gait_grounded:
     	curses_log("Walking Forward")
         for i in range(NUM_LEGS):
             if vector.eq(gait_pos[i], gait_dest[i]):
