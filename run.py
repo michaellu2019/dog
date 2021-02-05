@@ -119,6 +119,10 @@ def loop(interval):
 
             if mode == "walking":
             	gait_states = [0, 3, 3, 0]
+            	gait_dest = [gait[gait_states[i] + 1] for i in range(NUM_LEGS)]
+            	gait_src = [gait[gait_states[i]] for i in range(NUM_LEGS)]
+            	gait_pos = [gait_src[i] for i in range(NUM_LEGS)]
+            	
     else:
     	walking_mode = "none"
 
