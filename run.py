@@ -96,6 +96,7 @@ def loop():
         if mode == "walking":
             if char == ord("w"):
                 walking_mode = "forward"
+                curses_log("Walk Forward")
                 
             elif char == ord("s"):
                 curses_log("Walk Backward")
@@ -106,7 +107,7 @@ def loop():
 
 	        gait_grounded = [gait_states[i] % 3 == 0 for i in range(NUM_LEGS)]
 	        if walking_mode == "forward" or not gait_grounded:
-	        	curses_log("Walk Forward")
+	        	curses_log("Walking Forward")
                 for i in range(NUM_LEGS):
 	                if vector.eq(gait_pos[i], gait_dest[i]):
 	                    gait_pos[i] = gait_dest[i]
