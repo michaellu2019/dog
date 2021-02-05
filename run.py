@@ -19,7 +19,7 @@ screen = curses.initscr()
 curses.noecho()
 curses.cbreak()
 screen.keypad(True)
-screen.nodelay(1)
+#screen.nodelay(1)
 
 def setup():
     curses_log("Configuring all servos...")
