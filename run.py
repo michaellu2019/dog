@@ -113,7 +113,7 @@ def loop():
             move("pos", [-pos[0], -pos[1], -pos[2] + 89.0])
             move("rot", [-rot[0], -rot[1], -rot[2]])
 
-    gait_grounded = [gait_states[i] % 3 == 0 for i in range(NUM_LEGS)]
+    gait_grounded = all([gait_states[i] % 3 == 0 for i in range(NUM_LEGS)])
     curses_log(str(gait_grounded) + " GAIT GROUDNED")
     if walking_mode == "forward" or not gait_grounded:
     	curses_log("Walking Forward")
@@ -128,7 +128,7 @@ def loop():
             gait_pos[i] = vector.add(gait_pos[i], gait_vel)
             move_ik(i, gait_pos[i], rot)
     	curses_log(str(gait_pos))      
-    	 
+
     return True
 
 def move(move_type, vel):
