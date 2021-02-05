@@ -33,6 +33,7 @@ def loop():
     global pos
     global rot
     global mode
+    global walking_mode
     global gait_pos
     global gait_states
     
