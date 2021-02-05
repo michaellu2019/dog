@@ -104,22 +104,6 @@ def loop():
                 curses_log("Walk Left")
             elif char == ord("d"):
                 curses_log("Walk Right")
-
-	        gait_grounded = [gait_states[i] % 3 == 0 for i in range(NUM_LEGS)]
-	        curses_log(str(gait_grounded) + " GAIT GROUDNED")
-	        if walking_mode == "forward" or not gait_grounded:
-	        	curses_log("Walking Forward")
-                for i in range(NUM_LEGS):
-	                if vector.eq(gait_pos[i], gait_dest[i]):
-	                    gait_pos[i] = gait_dest[i]
-	                    gait_states[i] = gait_states[i] + 1 if gait_states[i] + 1 < len(gait) else 0
-	                    gait_src[i] = gait_dest[i]
-	                    gait_dest[i] = gait[gait_states[i]]
-	                
-	                gait_vel = vector.scalar_div(vector.sub(gait_dest[i], gait_src[i]), gait_divs)
-	                gait_pos[i] = vector.add(gait_pos[i], gait_vel)
-	                move_ik(i, gait_pos[i], rot)
-            	curses_log(str(gait_pos))
         
         if char == curses.KEY_ENTER or char == 10 or char == 13:
             mode = "walking" if mode == "standing" else "standing"
@@ -129,8 +113,22 @@ def loop():
             move("pos", [-pos[0], -pos[1], -pos[2] + 89.0])
             move("rot", [-rot[0], -rot[1], -rot[2]])
 
-
+    gait_grounded = [gait_states[i] % 3 == 0 for i in range(NUM_LEGS)]
+    curses_log(str(gait_grounded) + " GAIT GROUDNED")
+    if walking_mode == "forward" or not gait_grounded:
+    	curses_log("Walking Forward")
+        for i in range(NUM_LEGS):
+            if vector.eq(gait_pos[i], gait_dest[i]):
+                gait_pos[i] = gait_dest[i]
+                gait_states[i] = gait_states[i] + 1 if gait_states[i] + 1 < len(gait) else 0
+                gait_src[i] = gait_dest[i]
+                gait_dest[i] = gait[gait_states[i]]
             
+            gait_vel = vector.scalar_div(vector.sub(gait_dest[i], gait_src[i]), gait_divs)
+            gait_pos[i] = vector.add(gait_pos[i], gait_vel)
+            move_ik(i, gait_pos[i], rot)
+    	curses_log(str(gait_pos))      
+    	 
     return True
 
 def move(move_type, vel):
