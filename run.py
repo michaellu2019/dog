@@ -16,6 +16,7 @@ screen = curses.initscr()
 curses.noecho()
 curses.cbreak()
 screen.keypad(True)
+screen.nodelay(1)
 
 def setup():
     curses_log("Configuring all servos...")
@@ -29,13 +30,15 @@ def setup():
     screen.clear()
     screen.refresh()
 
-def loop():
+def loop(interval):
     global pos
     global rot
     global mode
     global walking_mode
     global gait_pos
     global gait_states
+
+    time.sleep(interval)
     
     char = screen.getch()
     speed = 0.5
@@ -116,6 +119,7 @@ def loop():
 
     gait_grounded = all([gait_pos[i][2] == DEFAULT_HEIGHT for i in range(NUM_LEGS)])
     curses_log(str(gait_grounded) + " GAIT GROUNDED " + str([gait_pos[i][2] == DEFAULT_HEIGHT for i in range(NUM_LEGS)]) + "--" + str([gait_pos[i][2] for i in range(NUM_LEGS)]))
+    curses_log(walking_mode)
     if walking_mode == "forward":
     	curses_log("Walking Forward")
         for i in range(NUM_LEGS):
@@ -173,7 +177,7 @@ def move(move_type, vel):
 
 def curses_log(msg):
     screen.addstr(msg + "\n")
-    screen.refresh()
+    screen.refresh(0.05)
 
 try:
 	setup()
