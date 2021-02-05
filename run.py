@@ -114,8 +114,16 @@ def loop(interval):
             walking_mode = "none"
             curses_log("Changed Mode to " + mode[0].upper() + mode[1:])
             curses_log("Reset")
-            move("pos", [-pos[0], -pos[1], -pos[2] + 89.0])
+            move("pos", [-pos[0], -pos[1], -pos[2] + DEFAULT_HEIGHT])
             move("rot", [-rot[0], -rot[1], -rot[2]])
+
+            if mode == "standing":
+            	gait_states = [0, 3, 3, 0]
+				gait_dest = [gait[gait_states[i] + 1] for i in range(NUM_LEGS)]
+				gait_src = [gait[gait_states[i]] for i in range(NUM_LEGS)]
+				gait_pos = [gait_src[i] for i in range(NUM_LEGS)]
+				for i in range(NUM_LEGS):
+					move_ik(i, gait_pos[i], rot)
     else:
     	walking_mode = "none"
 
