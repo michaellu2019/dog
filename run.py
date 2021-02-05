@@ -27,9 +27,9 @@ def setup():
         for j in range(NUM_LEG_SERVOS):
             curses_log("Configuring Servo " + str(i) + " " + str(j))
             write_servo(servo_channels[i][j], servo_neutral_vals[i][j])
-            time.sleep(1.0)
+            time.sleep(0.5)
     curses_log("Servo configuration complete...")
-    time.sleep(1.0)
+    time.sleep(0.5)
     screen.clear()
     screen.refresh()
 
