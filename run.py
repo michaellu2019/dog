@@ -124,11 +124,12 @@ def loop(interval):
             move("rot", [-rot[0], -rot[1], -rot[2]])
 
     else:
-    	walking_mode = "none"
+    	walking["direction"] = "none"
+    	walking["starting"] = False
 
     gait_grounded = all([gait_pos[i][2] == DEFAULT_HEIGHT for i in range(NUM_LEGS)])
     curses_log(str(gait_grounded) + " GAIT GROUNDED " + str([gait_pos[i][2] == DEFAULT_HEIGHT for i in range(NUM_LEGS)]) + "--" + str([gait_pos[i][2] for i in range(NUM_LEGS)]))
-    if walking_mode == "forward" and (not gait_grounded or walking["starting"]):
+    if walking["direction"] == "forward" and (not gait_grounded or walking["starting"]):
     	walking["starting"] = False
     	curses_log("Walking Forward")
         for i in range(NUM_LEGS):
