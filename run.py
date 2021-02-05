@@ -40,10 +40,11 @@ def loop(interval):
 
     time.sleep(interval)
     
+    screen.clear()
+    screen.refresh()
     char = screen.getch()
     speed = 0.5
     if char > 0:
-        screen.clear()
         
         if char == ord("q"):
             curses_log("Escape")
