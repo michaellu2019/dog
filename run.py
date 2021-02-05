@@ -10,7 +10,10 @@ from constants import *
 
 run_program = True
 mode = "standing"
-walking_mode = "none"
+walking = {
+	"direction": "none",
+	"starting": False
+}
 
 screen = curses.initscr()
 curses.noecho()
@@ -34,7 +37,7 @@ def loop(interval):
     global pos
     global rot
     global mode
-    global walking_mode
+    global walking
     global gait_pos
     global gait_states
 
@@ -53,7 +56,8 @@ def loop(interval):
         
         if char == ord(" "):
             mode = "standing"
-            walking_mode = "none"
+            walking["direction"] = "none"
+            walking["starting"] = False
             curses_log("Reset")
             move("pos", [-pos[0], -pos[1], -pos[2] + DEFAULT_HEIGHT])
             move("rot", [-rot[0], -rot[1], -rot[2]])
@@ -99,7 +103,8 @@ def loop(interval):
         
         if mode == "walking":
             if char == ord("w"):
-                walking_mode = "forward"
+                walking["direction"] = "forward"
+                walking["starting"] = True
                 curses_log("Walk Forward")
                 
             elif char == ord("s"):
@@ -111,25 +116,20 @@ def loop(interval):
         
         if char == curses.KEY_ENTER or char == 10 or char == 13:
             mode = "walking" if mode == "standing" else "standing"
-            walking_mode = "none"
+            walking["direction"] = "none"
+            walking["starting"] = False
             curses_log("Changed Mode to " + mode[0].upper() + mode[1:])
             curses_log("Reset")
             move("pos", [-pos[0], -pos[1], -pos[2] + DEFAULT_HEIGHT])
             move("rot", [-rot[0], -rot[1], -rot[2]])
 
-            if mode == "walking":
-            	gait_states = [0, 3, 3, 0]
-            	gait_dest = [gait[gait_states[i] + 1] for i in range(NUM_LEGS)]
-            	gait_src = [gait[gait_states[i]] for i in range(NUM_LEGS)]
-            	gait_pos = [gait_src[i] for i in range(NUM_LEGS)]
-            	
     else:
     	walking_mode = "none"
 
     gait_grounded = all([gait_pos[i][2] == DEFAULT_HEIGHT for i in range(NUM_LEGS)])
     curses_log(str(gait_grounded) + " GAIT GROUNDED " + str([gait_pos[i][2] == DEFAULT_HEIGHT for i in range(NUM_LEGS)]) + "--" + str([gait_pos[i][2] for i in range(NUM_LEGS)]))
-    curses_log(walking_mode)
-    if walking_mode == "forward" and not gait_grounded:
+    if walking_mode == "forward" and (not gait_grounded or walking["starting"]):
+    	walking["starting"] = False
     	curses_log("Walking Forward")
         for i in range(NUM_LEGS):
             if vector.eq(gait_pos[i], gait_dest[i]):
