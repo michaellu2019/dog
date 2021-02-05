@@ -191,7 +191,7 @@ def curses_log(msg):
 try:
 	setup()
 	while run_program:
-		run_program = loop(0.05)
+		run_program = loop(0.01)
 finally:
 	print("EXIT")
 	GPIO.cleanup()
