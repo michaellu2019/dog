@@ -45,7 +45,6 @@ def loop(interval):
     char = screen.getch()
     speed = 0.5
     if char > 0:
-        
         if char == ord("q"):
             curses_log("Escape")
             move("pos", [-pos[0], -pos[1], -pos[2] + DEFAULT_HEIGHT])
@@ -117,6 +116,8 @@ def loop(interval):
             curses_log("Reset")
             move("pos", [-pos[0], -pos[1], -pos[2] + 89.0])
             move("rot", [-rot[0], -rot[1], -rot[2]])
+    else:
+    	walking_mode = "none"
 
     gait_grounded = all([gait_pos[i][2] == DEFAULT_HEIGHT for i in range(NUM_LEGS)])
     curses_log(str(gait_grounded) + " GAIT GROUNDED " + str([gait_pos[i][2] == DEFAULT_HEIGHT for i in range(NUM_LEGS)]) + "--" + str([gait_pos[i][2] for i in range(NUM_LEGS)]))
