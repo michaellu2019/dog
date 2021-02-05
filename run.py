@@ -10,6 +10,7 @@ from constants import *
 
 run_program = True
 mode = "standing"
+walking_mode = "none"
 
 screen = curses.initscr()
 curses.noecho()
@@ -48,6 +49,7 @@ def loop():
         
         if char == ord(" "):
             mode = "standing"
+            walking_mode = "none"
             curses_log("Reset")
             move("pos", [-pos[0], -pos[1], -pos[2] + DEFAULT_HEIGHT])
             move("rot", [-rot[0], -rot[1], -rot[2]])
@@ -93,7 +95,18 @@ def loop():
         
         if mode == "walking":
             if char == ord("w"):
-                curses_log("Walk Forward")
+                walking_mode = "forward"
+                
+            elif char == ord("s"):
+                curses_log("Walk Backward")
+            if char == ord("a"):
+                curses_log("Walk Left")
+            elif char == ord("d"):
+                curses_log("Walk Right")
+
+	        gait_grounded = [gait_states[i] % 3 == 0 for i in range(NUM_LEGS)]
+	        if walking_mode == "forward" or not gait_grounded:
+	        	curses_log("Walk Forward")
                 for i in range(NUM_LEGS):
 	                if vector.eq(gait_pos[i], gait_dest[i]):
 	                    gait_pos[i] = gait_dest[i]
@@ -105,20 +118,16 @@ def loop():
 	                gait_pos[i] = vector.add(gait_pos[i], gait_vel)
 	                move_ik(i, gait_pos[i], rot)
             	curses_log(str(gait_pos))
-                
-            elif char == ord("s"):
-                curses_log("Walk Backward")
-            if char == ord("a"):
-                curses_log("Walk Left")
-            elif char == ord("d"):
-                curses_log("Walk Right")
         
         if char == curses.KEY_ENTER or char == 10 or char == 13:
             mode = "walking" if mode == "standing" else "standing"
+            walking_mode = "none"
             curses_log("Changed Mode to " + mode[0].upper() + mode[1:])
             curses_log("Reset")
             move("pos", [-pos[0], -pos[1], -pos[2] + 89.0])
             move("rot", [-rot[0], -rot[1], -rot[2]])
+
+
             
     return True
 
