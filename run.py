@@ -130,7 +130,6 @@ def loop(interval):
     gait_grounded = all([gait_pos[i][2] == DEFAULT_HEIGHT for i in range(NUM_LEGS)])
     curses_log(str(gait_grounded) + " GAIT GROUNDED " + str([gait_pos[i][2] == DEFAULT_HEIGHT for i in range(NUM_LEGS)]) + "--" + str([gait_pos[i][2] for i in range(NUM_LEGS)]))
     if walking["direction"] == "forward" and (not gait_grounded or walking["starting"]):
-    	walking["starting"] = False
     	curses_log("Walking Forward")
         for i in range(NUM_LEGS):
             if vector.eq(gait_pos[i], gait_dest[i]):
