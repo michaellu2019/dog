@@ -138,7 +138,9 @@ def loop(interval):
             if vector.eq(gait_pos[i], gait_dest[i]):
                 gait_pos[i] = gait_dest[i]
                 gait_src[i] = gait_dest[i]
-                gait_states[i] = gait_states[i] + 1 if gait_states[i] + 1 < len(gait) else 0
+                gait_states[i] = gait_states[i] + 1 
+                if gait_states[i] + 1 >= len(gait):
+                	gait_states[i] = 0
                 gait_dest[i] = gait[gait_states[i]]
             
             gait_vel = vector.scalar_div(vector.sub(gait_dest[i], gait_src[i]), gait_divs)
