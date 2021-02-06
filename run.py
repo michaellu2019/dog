@@ -19,7 +19,7 @@ screen = curses.initscr()
 curses.noecho()
 curses.cbreak()
 screen.keypad(True)
-screen.nodelay(1)
+#screen.nodelay(1)
 
 def setup():
     curses_log("Configuring all servos...")
@@ -43,8 +43,8 @@ def loop(interval):
 
     time.sleep(interval)
     
-    screen.clear()
-    screen.refresh()
+    #screen.clear()
+    #screen.refresh()
     char = screen.getch()
     if char > 0:
     	screen.clear()
