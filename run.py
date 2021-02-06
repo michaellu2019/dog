@@ -129,9 +129,6 @@ def loop(interval):
 
     gait_grounded = all([gait_pos[i][2] == DEFAULT_HEIGHT for i in range(NUM_LEGS)])
     curses_log(str(gait_grounded) + " GAIT GROUNDED " + str([gait_pos[i][2] == DEFAULT_HEIGHT for i in range(NUM_LEGS)]) + "--" + str([gait_pos[i][2] for i in range(NUM_LEGS)]))
-    curses_log("ST " + str(gait_states))
-    curses_log("SR " + str(gait_src))
-    curses_log("DS " + str(gait_dest))
     if walking["direction"] == "forward" or (not gait_grounded or walking["starting"]):
     	#curses_log("Walking Forward")
         for i in range(NUM_LEGS):
