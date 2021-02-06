@@ -132,7 +132,7 @@ def loop(interval):
     curses_log("ST " + str(gait_states))
     curses_log("SR " + str(gait_src))
     curses_log("DS " + str(gait_dest))
-    curses_log("GG " + str(gait) + " " + str(STEP_SIZE * (1/3)))
+    curses_log("GG " + str(gait) + " " + str(STEP_SIZE * 0.3333333))
     if walking["direction"] == "forward" or (not gait_grounded or walking["starting"]):
     	#curses_log("Walking Forward")
         for i in range(NUM_LEGS):
