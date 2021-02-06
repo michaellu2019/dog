@@ -1,3 +1,5 @@
+EPSILON = 1e-8
+
 NUM_LEGS = 4
 NUM_LEG_SERVOS = 3
 LEG_LEN = 63.0 # all length float units in millimeters
