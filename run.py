@@ -132,15 +132,14 @@ def loop(interval):
     curses_log("ST " + str(gait_states))
     curses_log("SR " + str(gait_src))
     curses_log("DS " + str(gait_dest))
+    curses_log("GG " + str(gait))
     if walking["direction"] == "forward" or (not gait_grounded or walking["starting"]):
     	#curses_log("Walking Forward")
         for i in range(NUM_LEGS):
             if vector.eq(gait_pos[i], gait_dest[i]):
                 gait_pos[i] = gait_dest[i]
                 gait_src[i] = gait_dest[i]
-                gait_states[i] = gait_states[i] + 1 
-                if gait_states[i] + 1 >= len(gait):
-                	gait_states[i] = 0
+                gait_states[i] = gait_states[i] + 1 if gait_states[i] + 1 < len(gait) else 0
                 gait_dest[i] = gait[gait_states[i]]
             
             gait_vel = vector.scalar_div(vector.sub(gait_dest[i], gait_src[i]), gait_divs)
