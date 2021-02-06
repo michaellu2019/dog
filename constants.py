@@ -15,11 +15,11 @@ pos = [0.0, 0.0, DEFAULT_HEIGHT]
 rot = [0.0, 0.0, 0.0]
 
 gait = [[0.0, 0.0, DEFAULT_HEIGHT], 
-		[STEP_SIZE * (1/3), 0.0, DEFAULT_HEIGHT],
-		[STEP_SIZE * (2/3), 0.0, DEFAULT_HEIGHT],
+		[STEP_SIZE * float(1/3), 0.0, DEFAULT_HEIGHT],
+		[STEP_SIZE * float(2/3), 0.0, DEFAULT_HEIGHT],
 		[STEP_SIZE, 0.0, DEFAULT_HEIGHT], 
-		[STEP_SIZE * (2/3), 0.0, DEFAULT_HEIGHT], 
-		[STEP_SIZE * (1/3), 0.0, DEFAULT_HEIGHT]]
+		[STEP_SIZE * float(2/3), 0.0, DEFAULT_HEIGHT], 
+		[STEP_SIZE * float(1/3), 0.0, DEFAULT_HEIGHT]]
 gait_states = [0, 3, 3, 0]
 gait_dest = [gait[gait_states[i] + 1] for i in range(NUM_LEGS)]
 gait_src = [gait[gait_states[i]] for i in range(NUM_LEGS)]
