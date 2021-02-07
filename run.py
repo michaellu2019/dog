@@ -40,6 +40,9 @@ def loop(interval):
     global walking
     global gait_pos
     global gait_states
+    global gait
+    global forward_gait
+    global reverse_gait
 
     time.sleep(interval)
     
