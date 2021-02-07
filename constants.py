@@ -23,7 +23,7 @@ forward_gait = [[0.0, 0.0, DEFAULT_HEIGHT],
 				[STEP_SIZE, 0.0, DEFAULT_HEIGHT], 
 				[STEP_SIZE * (2.0/3.0), 0.0, DEFAULT_HEIGHT - STEP_HEIGHT], 
 				[STEP_SIZE * (1.0/3.0), 0.0, DEFAULT_HEIGHT - STEP_HEIGHT]]
-reverse_gait = [[-step[0], step[1], step[2]] for step in left_gait]
+reverse_gait = [[-step[0], step[1], step[2]] for step in forward_gait]
 
 left_gait = [[0.0, 0.0, DEFAULT_HEIGHT], 
 			[0.0, STEP_SIZE * (1.0/3.0), DEFAULT_HEIGHT],
