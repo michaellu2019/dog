@@ -43,6 +43,8 @@ def loop(interval):
     global gait
     global forward_gait
     global reverse_gait
+    global left_gait
+    global right_gait
 
     time.sleep(interval)
     
@@ -116,8 +118,14 @@ def loop(interval):
                 gait = reverse_gait
                 curses_log("Walk Backward")
             if char == ord("a"):
+                walking["direction"] = "left"
+                walking["starting"] = True
+                gait = left_gait
                 curses_log("Walk Left")
             elif char == ord("d"):
+                walking["direction"] = "right"
+                walking["starting"] = True
+                gait = right_gait
                 curses_log("Walk Right")
         
         if char == curses.KEY_ENTER or char == 10 or char == 13:
