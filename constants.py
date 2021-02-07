@@ -16,7 +16,6 @@ STEP_SPEED = 5.0
 pos = [0.0, 0.0, DEFAULT_HEIGHT]
 rot = [0.0, 0.0, 0.0]
 
-gait = []
 forward_gait = [[0.0, 0.0, DEFAULT_HEIGHT], 
 				[STEP_SIZE * (1.0/3.0), 0.0, DEFAULT_HEIGHT],
 				[STEP_SIZE * (2.0/3.0), 0.0, DEFAULT_HEIGHT],
@@ -33,6 +32,7 @@ left_gait = [[0.0, 0.0, DEFAULT_HEIGHT],
 			[0.0, STEP_SIZE * (1.0/3.0), DEFAULT_HEIGHT - STEP_HEIGHT]]
 right_gait = [[step[0], -step[1], step[2]] for step in left_gait]
 
+gait = forward_gait[::1]
 gait_states = [0, 3, 3, 0]
 gait_dest = [gait[gait_states[i] + 1] for i in range(NUM_LEGS)]
 gait_src = [gait[gait_states[i]] for i in range(NUM_LEGS)]
