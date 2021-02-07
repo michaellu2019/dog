@@ -106,8 +106,9 @@ def loop(interval):
                 walking["direction"] = "forward"
                 walking["starting"] = True
                 curses_log("Walk Forward")
-                
             elif char == ord("s"):
+                walking["direction"] = "backward"
+                walking["starting"] = True
                 curses_log("Walk Backward")
             if char == ord("a"):
                 curses_log("Walk Left")
@@ -128,14 +129,17 @@ def loop(interval):
     	walking["starting"] = False
 
     gait_grounded = all([abs(gait_pos[i][2] - DEFAULT_HEIGHT) < EPSILON for i in range(NUM_LEGS)])
-    curses_log(str(gait_grounded) + " GAIT GROUNDED " + str([gait_pos[i][2] == DEFAULT_HEIGHT for i in range(NUM_LEGS)]) + "--" + str([gait_pos[i][2] for i in range(NUM_LEGS)]))
-    if walking["direction"] == "forward" or (not gait_grounded or walking["starting"]):
-    	curses_log("Walking Forward")
+    # curses_log(str(gait_grounded) + " GAIT GROUNDED " + str([gait_pos[i][2] == DEFAULT_HEIGHT for i in range(NUM_LEGS)]) + "--" + str([gait_pos[i][2] for i in range(NUM_LEGS)]))
+    if walking["direction"] != "none" or (not gait_grounded or walking["starting"]):
+    	curses_log("Walking")
         for i in range(NUM_LEGS):
             if vector.eq(gait_pos[i], gait_dest[i]):
                 gait_pos[i] = gait_dest[i]
                 gait_src[i] = gait_dest[i]
-                gait_states[i] = gait_states[i] + 1 if gait_states[i] + 1 < len(gait) else 0
+                if walking["direction"] == "forward":
+                	gait_states[i] = gait_states[i] + 1 if gait_states[i] + 1 < len(gait) else 0
+                elif walking["direction"] == "backward":
+                	gait_states[i] = gait_states[i] - 1 if gait_states[i] - 1 >= 0 else len(gait) - 1
                 gait_dest[i] = gait[gait_states[i]]
             
             gait_vel = vector.scalar_div(vector.sub(gait_dest[i], gait_src[i]), gait_divs)
