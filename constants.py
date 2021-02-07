@@ -24,12 +24,7 @@ forward_gait = [[0.0, 0.0, DEFAULT_HEIGHT],
 				[STEP_SIZE * (1.0/3.0), 0.0, DEFAULT_HEIGHT - STEP_HEIGHT]]
 reverse_gait = [[-step[0], step[1], step[2]] for step in forward_gait]
 
-left_gait = [[0.0, 0.0, DEFAULT_HEIGHT], 
-			[0.0, STEP_SIZE * (1.0/3.0), DEFAULT_HEIGHT],
-			[0.0, STEP_SIZE * (2.0/3.0), DEFAULT_HEIGHT],
-			[0.0, STEP_SIZE, DEFAULT_HEIGHT], 
-			[0.0, STEP_SIZE * (2.0/3.0), DEFAULT_HEIGHT - STEP_HEIGHT * 1.5], 
-			[0.0, STEP_SIZE * (1.0/3.0), DEFAULT_HEIGHT - STEP_HEIGHT * 1.5]]
+left_gait = [[step[1], step[0], step[2]] for step in forward_gait]
 right_gait = [[step[0], -step[1], step[2]] for step in left_gait]
 
 gait = forward_gait[::1]
