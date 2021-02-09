@@ -36,8 +36,8 @@ right_turn_gait = [leg_right_gait if i < NUM_LEGS//2 else leg_left_gait for i in
 
 gait = forward_gait[::1]
 gait_states = [0, 3, 3, 0]
-gait_dest = [gait[gait_states[i] + 1] for i in range(NUM_LEGS)]
-gait_src = [gait[gait_states[i]] for i in range(NUM_LEGS)]
+gait_dest = [gait[i][gait_states[i] + 1] for i in range(NUM_LEGS)]
+gait_src = [gait[i][gait_states[i]] for i in range(NUM_LEGS)]
 gait_pos = [gait_src[i] for i in range(NUM_LEGS)]
 gait_divs = STEP_SIZE/STEP_SPEED
 
