@@ -16,16 +16,23 @@ STEP_SPEED = 5.0
 pos = [0.0, 0.0, DEFAULT_HEIGHT]
 rot = [0.0, 0.0, 0.0]
 
-forward_gait = [[0.0, 0.0, DEFAULT_HEIGHT], 
+leg_forward_gait = [[0.0, 0.0, DEFAULT_HEIGHT], 
 				[STEP_SIZE * (1.0/3.0), 0.0, DEFAULT_HEIGHT],
 				[STEP_SIZE * (2.0/3.0), 0.0, DEFAULT_HEIGHT],
 				[STEP_SIZE, 0.0, DEFAULT_HEIGHT], 
 				[STEP_SIZE * (2.0/3.0), 0.0, DEFAULT_HEIGHT - STEP_HEIGHT], 
 				[STEP_SIZE * (1.0/3.0), 0.0, DEFAULT_HEIGHT - STEP_HEIGHT]]
-reverse_gait = [[-step[0], step[1], step[2]] for step in forward_gait]
+leg_reverse_gait = [[-step[0], step[1], step[2]] for step in forward_gait]
+leg_left_gait = [[step[1], step[0], step[2]] for step in forward_gait]
+leg_right_gait = [[step[0], -step[1], step[2]] for step in left_gait]
 
-left_gait = [[step[1], step[0], step[2]] for step in forward_gait]
-right_gait = [[step[0], -step[1], step[2]] for step in left_gait]
+forward_gait = [leg_forward_gait for i in range(NUM_LEGS)]
+reverse_gait = [leg_reverse_gait for i in range(NUM_LEGS)]
+left_gait = [leg_left_gait for i in range(NUM_LEGS)]
+right_gait = [leg_right_gait for i in range(NUM_LEGS)]
+
+left_turn_gait = [leg_left_gait if i < NUM_LEGS//2 else leg_right_gait for i in range(NUM_LEGS)]
+right_turn_gait = [leg_right_gait if i < NUM_LEGS//2 else leg_left_gait for i in range(NUM_LEGS)]
 
 gait = forward_gait[::1]
 gait_states = [0, 3, 3, 0]
