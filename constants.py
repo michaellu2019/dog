@@ -22,9 +22,9 @@ leg_forward_gait = [[0.0, 0.0, DEFAULT_HEIGHT],
 				[STEP_SIZE, 0.0, DEFAULT_HEIGHT], 
 				[STEP_SIZE * (2.0/3.0), 0.0, DEFAULT_HEIGHT - STEP_HEIGHT], 
 				[STEP_SIZE * (1.0/3.0), 0.0, DEFAULT_HEIGHT - STEP_HEIGHT]]
-leg_reverse_gait = [[-step[0], step[1], step[2]] for step in forward_gait]
-leg_left_gait = [[step[1], step[0], step[2]] for step in forward_gait]
-leg_right_gait = [[step[0], -step[1], step[2]] for step in left_gait]
+leg_reverse_gait = [[-step[0], step[1], step[2]] for step in leg_forward_gait]
+leg_left_gait = [[step[1], step[0], step[2]] for step in leg_forward_gait]
+leg_right_gait = [[step[0], -step[1], step[2]] for step in leg_left_gait]
 
 forward_gait = [leg_forward_gait for i in range(NUM_LEGS)]
 reverse_gait = [leg_reverse_gait for i in range(NUM_LEGS)]
