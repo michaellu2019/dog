@@ -23,11 +23,12 @@ screen.nodelay(1)
 
 def setup():
     curses_log("Configuring all servos...")
-    for i in range(NUM_LEGS):
-        for j in range(NUM_LEG_SERVOS):
+    for i in range(len(servo_channels)):
+        for j in range(len(servo_channels[i])):
             curses_log("Configuring Servo " + str(i) + " " + str(j))
             write_servo(servo_channels[i][j], servo_neutral_vals[i][j])
             time.sleep(0.5)
+
     curses_log("Servo configuration complete...")
     time.sleep(0.5)
     screen.clear()
