@@ -1,6 +1,7 @@
 import time
 import math
 import curses
+import pygame
 
 import RPi.GPIO as GPIO
 
@@ -20,6 +21,11 @@ curses.noecho()
 curses.cbreak()
 screen.keypad(True)
 screen.nodelay(1)
+
+pygame.mixer.init()
+pygame.mixer.music.load("audio/gentrification.mp3")
+pygame.mixer.music.set_volume(1.0)
+pygame.mixer.music.play()
 
 def setup():
     curses_log("Configuring all servos...")
