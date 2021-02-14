@@ -9,14 +9,6 @@ pwm.set_pwm_freq(60)
 
 MIN_SERVO_PULSE = 100
 MAX_SERVO_PULSE = 650
-NUM_LEGS = 4
-NUM_LEG_SERVOS = 3
-LEG_LEN = 63.0 # all length float units in millimeters
-BODY_LEN = 153.0
-BODY_WID = 112.0
-DEFAULT_HEIGHT = 89.0
-
-servo_channels = [[0, 1, 2], [4, 5, 6], [8, 9, 10], [12, 13, 14]]
 
 def move_ik(leg_id, pos, rot):
     x, y, z = pos
@@ -121,6 +113,13 @@ def move_ik(leg_id, pos, rot):
     
     
 def write_servo(channel, angle):
+    offset = 0
+    for i in range(NUM_LEGS):
+        for j in range(NUM_LEG_SERVOS):
+            if servo_channels[i][j] == channel:
+                offset = servo_offsets[i][j]
+    angle += offset
+
     MAX_SHOULDER_ANGLE = 30.0
     MAX_LEG_ANGLE = 55.0
     if channel in {2, 6, 10, 14} and abs(90.0 - angle) > MAX_SHOULDER_ANGLE:
