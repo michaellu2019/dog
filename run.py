@@ -23,9 +23,7 @@ screen.keypad(True)
 screen.nodelay(1)
 
 pygame.mixer.init()
-pygame.mixer.music.load("audio/gentrification.mp3")
 pygame.mixer.music.set_volume(1.0)
-pygame.mixer.music.play()
 
 def setup():
     curses_log("Configuring all servos...")
@@ -114,6 +112,13 @@ def loop(interval):
             if char == ord("f"):
                 curses_log("Move Down")
                 move("pos", [0.0, 0.0, -STANDING_SPEED])
+
+            if char == ord("1"):
+                pygame.mixer.music.load("audio/gentrification.mp3")
+                pygame.mixer.music.play()
+            elif char == ord("2"):
+                pygame.mixer.music.load("audio/boulder.mp3")
+                pygame.mixer.music.play()
         
         if mode == "walking":
             if char == ord("w"):
