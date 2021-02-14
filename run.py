@@ -2,6 +2,7 @@ import time
 import math
 import curses
 import pygame
+from mutagen.mp3 import MP3
 
 import RPi.GPIO as GPIO
 
@@ -14,6 +15,10 @@ mode = "standing"
 walking = {
 	"direction": "none",
 	"starting": False
+}
+speaking = {
+    "duration": 0,
+    "play": False
 }
 
 screen = curses.initscr()
@@ -43,6 +48,7 @@ def loop(interval):
     global rot
     global mode
     global walking
+    global speaking
     global gait_pos
     global gait_states
     global gait
@@ -114,23 +120,17 @@ def loop(interval):
                 move("pos", [0.0, 0.0, -STANDING_SPEED])
 
             if char == ord("1"):
-                pygame.mixer.music.load("audio/gentrification.mp3")
-                pygame.mixer.music.play()
+                speak("gentrification")
             elif char == ord("2"):
-                pygame.mixer.music.load("audio/sing.mp3")
-                pygame.mixer.music.play()
+                speak("sing")
             elif char == ord("3"):
-                pygame.mixer.music.load("audio/boulder.mp3")
-                pygame.mixer.music.play()
+                speak("boulder")
             elif char == ord("4"):
-                pygame.mixer.music.load("audio/donkey.mp3")
-                pygame.mixer.music.play()
+                speak("donkey")
             elif char == ord("5"):
-                pygame.mixer.music.load("audio/die1.mp3")
-                pygame.mixer.music.play()
+                speak("die1")
             elif char == ord("6"):
-                pygame.mixer.music.load("audio/die2.mp3")
-                pygame.mixer.music.play()
+                speak("die2")
         
         if mode == "walking":
             if char == ord("w"):
@@ -216,24 +216,12 @@ def move(move_type, vel):
     for i in range(NUM_LEGS):
         move_ik(i, pos, rot)
         
-    """
-        This code still caused a fire so maybe don't use it?
-        try:
-            move_ik(i, pos, rot)
-        except ValueError:
-            curses_log("Error! Dangerous orientation for servos! Fire!!!")
-            error = True
-            break
-        
-    if error:
-        curses_log("Returning to previous orientation!")
-        for i in range(NUM_LEGS):
-            try:
-                move_ik(i, prev_pos, prev_rot)
-            except ValueError:
-                curses_log("Error! Dangerous orientation for servos! Fire!!!")
-                break
-    """
+def speak(file_name):
+    curses_log("Playing \"" + file_name + ".mp3\"")
+    pygame.mixer.music.load("audio/" + file_name + ".mp3")
+    pygame.mixer.music.play()
+    speaking["duration"] = MP3("audio/" + file_name + ".mp3").info.length
+    curses_log("Duration: " + str(speaking["duration"]))
 
 def curses_log(msg):
     screen.addstr(msg + "\n")
