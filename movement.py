@@ -114,8 +114,8 @@ def move_ik(leg_id, pos, rot):
     
 def write_servo(channel, angle):
     offset = 0
-    for i in range(NUM_LEGS):
-        for j in range(NUM_LEG_SERVOS):
+    for i in range(len(servo_channels)):
+        for j in range(len(servo_channels[i])):
             if servo_channels[i][j] == channel:
                 offset = servo_offsets[i][j]
     angle += offset
