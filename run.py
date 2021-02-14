@@ -23,7 +23,7 @@ screen.keypad(True)
 screen.nodelay(1)
 
 pygame.mixer.init()
-pygame.mixer.music.set_volume(1.0)
+pygame.mixer.music.set_volume(2.0)
 
 def setup():
     curses_log("Configuring all servos...")
@@ -117,7 +117,19 @@ def loop(interval):
                 pygame.mixer.music.load("audio/gentrification.mp3")
                 pygame.mixer.music.play()
             elif char == ord("2"):
+                pygame.mixer.music.load("audio/sing.mp3")
+                pygame.mixer.music.play()
+            elif char == ord("3"):
                 pygame.mixer.music.load("audio/boulder.mp3")
+                pygame.mixer.music.play()
+            elif char == ord("4"):
+                pygame.mixer.music.load("audio/donkey.mp3")
+                pygame.mixer.music.play()
+            elif char == ord("5"):
+                pygame.mixer.music.load("audio/die1.mp3")
+                pygame.mixer.music.play()
+            elif char == ord("6"):
+                pygame.mixer.music.load("audio/die2.mp3")
                 pygame.mixer.music.play()
         
         if mode == "walking":
