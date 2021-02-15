@@ -47,8 +47,8 @@ HEAD_SPEAKING_SPEED = 0.5
 
 speaking_animation = [[90.0, 90.0], [90.0 - HEAD_SPEAKING_SWEEP, 90.0], [90, 90.0], [90.0 + HEAD_SPEAKING_SWEEP, 90.0]]
 speaking_animation_states = [0, 0]
-speaking_animation_dest = [speaking_animation_states[i] + 1 for i in range(NUM_HEAD_SERVOS)]
-speaking_animation_src = [speaking_animation_states[i] for i in range(NUM_HEAD_SERVOS)]
+speaking_animation_dest = [speaking_animation[speaking_animation_states[i] + 1] for i in range(NUM_HEAD_SERVOS)]
+speaking_animation_src = [speaking_animation[speaking_animation_states[i]] for i in range(NUM_HEAD_SERVOS)]
 speaking_animation_pos = [speaking_animation_src[i] for i in range(NUM_HEAD_SERVOS)]
 speaking_animation_divs = HEAD_SPEAKING_SWEEP/HEAD_SPEAKING_SPEED
 
