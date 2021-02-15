@@ -55,7 +55,7 @@ speaking_animation_divs = HEAD_SPEAKING_SWEEP/HEAD_SPEAKING_SPEED
 HEAD_GAIT_SPEED = 7.0
 HEAD_GAIT_SPEED = 1.0
 
-head_gait = [[90, 90], [80, 80]]
+head_gait = [[90, 90], [75, 75]]
 # head_gait = [[90.0, 90.0], [90.0 - HEAD_SPEAKING_SWEEP, 90.0], [90, 90.0], [90.0 + HEAD_SPEAKING_SWEEP, 90.0]] 
 # speaking_animation_states = [0, 0]
 # speaking_animation_dest = [speaking_animation[speaking_animation_states[i] + 1][i] for i in range(NUM_HEAD_SERVOS)]
