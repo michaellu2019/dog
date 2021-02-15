@@ -61,6 +61,9 @@ def loop(interval):
     global right_gait
     global left_turn_gait
     global right_turn_gait
+    global speaking_animation_pos
+    global speaking_animation_states
+    global speaking_animation_dest
 
     time.sleep(interval)
     
