@@ -85,6 +85,8 @@ def loop(interval):
             curses_log("Reset")
             move("pos", [-pos[0], -pos[1], -pos[2] + DEFAULT_HEIGHT])
             move("rot", [-rot[0], -rot[1], -rot[2]])
+            for i in range(NUM_HEAD_SERVOS):
+                write_servo(servo_channels[-1][i], servo_neutral_vals[-1][i])
         
         if mode == "standing":
             if char == ord("o"):
