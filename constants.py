@@ -42,8 +42,8 @@ gait_src = [gait[i][gait_states[i]] for i in range(NUM_LEGS)]
 gait_pos = [gait_src[i] for i in range(NUM_LEGS)]
 gait_divs = STEP_SIZE/STEP_SPEED
 
-HEAD_SPEAKING_SWEEP = 10.0
-HEAD_SPEAKING_SPEED = 1.5
+HEAD_SPEAKING_SWEEP = 5.0
+HEAD_SPEAKING_SPEED = 0.5
 
 speaking_animation = [[90.0, 90.0], [90.0 - HEAD_SPEAKING_SWEEP, 90.0], [90, 90.0], [90.0 + HEAD_SPEAKING_SWEEP, 90.0]]
 speaking_animation_states = [0, 0]

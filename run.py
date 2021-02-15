@@ -215,6 +215,7 @@ def loop(interval):
             speaking_animation_vel = (speaking_animation_dest[i] - speaking_animation_src[i])/speaking_animation_divs
             speaking_animation_pos[i] += speaking_animation_vel
             write_servo(servo_channels[-1][i], speaking_animation_pos[i])
+        curses_log(speaking_animation_pos)
     elif speaking["play"] and speaking["current_time"] - speaking["start_time"] > speaking["duration"]:
         speaking["play"] = False
         speaking["start_time"] = 0
