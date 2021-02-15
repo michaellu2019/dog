@@ -18,7 +18,9 @@ walking = {
 }
 speaking = {
     "duration": 0,
-    "play": False
+    "play": False,
+    "start_time": 0,
+    "current_time": 0
 }
 
 screen = curses.initscr()
@@ -194,6 +196,15 @@ def loop(interval):
             move_ik(i, gait_pos[i], rot)
     	curses_log(str(gait_pos))      
 
+    if speaking["play"] and speaking["current_time"] - speaking["start_time"] < speaking["duration"]:
+        speaking["current_time"] = time.time()
+        curses_log("SPEAK")
+    else:
+        speaking["play"] = False
+        speaking["start_time"] = 0
+        speaking["current_time"] = 0
+        speaking["duration"] = 0
+
     return True
 
 def move(move_type, vel):
@@ -217,10 +228,14 @@ def move(move_type, vel):
         move_ik(i, pos, rot)
         
 def speak(file_name):
-    curses_log("Playing \"" + file_name + ".mp3\"")
     pygame.mixer.music.load("audio/" + file_name + ".mp3")
     pygame.mixer.music.play()
     speaking["duration"] = MP3("audio/" + file_name + ".mp3").info.length
+    speaking["start_time"] = time.time()
+    speaking["current_time"] = time.time()
+    speaking["play"] = True
+
+    curses_log("Playing \"" + file_name + ".mp3\"")
     curses_log("Duration: " + str(speaking["duration"]))
 
 def curses_log(msg):
