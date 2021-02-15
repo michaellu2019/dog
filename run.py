@@ -205,20 +205,17 @@ def loop(interval):
         curses_log("Playing: \"" + speaking["file_name"] + "\"")
         curses_log("Duration: " + str(speaking["duration"]))
 
-        # for i in range(NUM_HEAD_SERVOS):
-        #     if abs(speaking_animation_pos[i] - speaking_animation_dest[i]) < EPSILON:
-        #         speaking_animation_pos[i] = speaking_animation_dest[i]
-        #         speaking_animation_src[i] = speaking_animation_dest
-        #         speaking_animation_states[i] = speaking_animation_states[i] + 1 if speaking_animation_states[i] + 1 < len(speaking_animation) else 0 
-        #         speaking_animation_dest[i] = speaking_animation[speaking_animation_states[i]]
+        for i in range(NUM_HEAD_SERVOS):
+            if abs(speaking_animation_pos[i] - speaking_animation_dest[i]) < EPSILON:
+                speaking_animation_pos[i] = speaking_animation_dest[i]
+                speaking_animation_src[i] = speaking_animation_dest[i]
+                speaking_animation_states[i] = speaking_animation_states[i] + 1 if speaking_animation_states[i] + 1 < len(speaking_animation) else 0 
+                speaking_animation_dest[i] = speaking_animation[speaking_animation_states[i]]
 
-        #     speaking_animation_vel = (speaking_animation_dest[i] - speaking_animation_src[i])/speaking_animation_divs
-        #     speaking_animation_pos[i] += speaking_animation_vel
-        #     write_servo(servo_channels[-1][i], speaking_animation_pos[i])
+            speaking_animation_vel = (speaking_animation_dest[i] - speaking_animation_src[i])/speaking_animation_divs
+            speaking_animation_pos[i] += speaking_animation_vel
+            write_servo(servo_channels[-1][i], speaking_animation_pos[i])
         curses_log(str(speaking_animation_pos))
-        curses_log(str(speaking_animation_src))
-        curses_log(str(speaking_animation_dest))
-        curses_log(str(speaking_animation_states))
     elif speaking["play"] and speaking["current_time"] - speaking["start_time"] > speaking["duration"]:
         speaking["play"] = False
         speaking["start_time"] = 0
