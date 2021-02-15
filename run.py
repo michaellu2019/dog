@@ -20,7 +20,8 @@ speaking = {
     "duration": 0,
     "play": False,
     "start_time": 0,
-    "current_time": 0
+    "current_time": 0,
+    "file_name": ""
 }
 
 screen = curses.initscr()
@@ -198,12 +199,27 @@ def loop(interval):
 
     if speaking["play"] and speaking["current_time"] - speaking["start_time"] < speaking["duration"]:
         speaking["current_time"] = time.time()
-        curses_log("SPEAK")
-    else:
+        curses_log("Playing: \"" + speaking["file_name"] + "\"")
+        curses_log("Duration: " + str(speaking["duration"]))
+
+        for i in range(NUM_HEAD_SERVOS):
+            if abs(speaking_animation_pos[i] - speaking_animation_dest[i]) < EPSILON:
+                speaking_animation_pos[i] = speaking_animation_dest[i]
+                speaking_animation_src[i] = speaking_animation_dest
+                speaking_animation_states[i] = speaking_animation_states[i] + 1 if speaking_animation_states[i] + 1 < len(speaking_animation) else 0 
+                speaking_animation_dest = speaking_animation[speaking_animation_states[i]]
+
+            speaking_animation_vel = (speaking_animation_dest[i] - speaking_animation_src[i])/speaking_animation_divs
+            speaking_animation_pos[i] += speaking_animation_vel
+            write_servo(servo_channels[-1][i], speaking_animation_pos[i])
+    elif speaking["play"] speaking["current_time"] - speaking["start_time"] > speaking["duration"]:
         speaking["play"] = False
         speaking["start_time"] = 0
         speaking["current_time"] = 0
         speaking["duration"] = 0
+
+        for i in range(NUM_HEAD_SERVOS):
+            write_servo(servo_channels[-1][i], servo_neutral_vals[-1][i])
 
     return True
 
@@ -234,8 +250,9 @@ def speak(file_name):
     speaking["start_time"] = time.time()
     speaking["current_time"] = time.time()
     speaking["play"] = True
+    speaking["file_name"] = file_name + ".mp3"
 
-    curses_log("Playing \"" + file_name + ".mp3\"")
+    curses_log("Playing: \"" + speaking["file_name"] + "\"")
     curses_log("Duration: " + str(speaking["duration"]))
 
 def curses_log(msg):

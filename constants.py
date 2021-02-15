@@ -2,6 +2,7 @@ EPSILON = 1e-8
 
 NUM_LEGS = 4
 NUM_LEG_SERVOS = 3
+NUM_HEAD_SERVOS = 2
 LEG_LEN = 63.0 # all length float units in millimeters
 BODY_LEN = 153.0
 BODY_WID = 112.0
@@ -16,7 +17,7 @@ STEP_SPEED = 5.0
 pos = [0.0, 0.0, DEFAULT_HEIGHT]
 rot = [0.0, 0.0, 0.0]
 
-leg_forward_gait = [[0.0, 0.0, DEFAULT_HEIGHT], 
+leg_forward_gait = [[0.0, 0.0, DEFAULT_HEIGHT], # [X, Y, Z] coordinates for foot placement
 				[STEP_SIZE * (1.0/3.0), 0.0, DEFAULT_HEIGHT],
 				[STEP_SIZE * (2.0/3.0), 0.0, DEFAULT_HEIGHT],
 				[STEP_SIZE, 0.0, DEFAULT_HEIGHT], 
@@ -40,6 +41,16 @@ gait_dest = [gait[i][gait_states[i] + 1] for i in range(NUM_LEGS)]
 gait_src = [gait[i][gait_states[i]] for i in range(NUM_LEGS)]
 gait_pos = [gait_src[i] for i in range(NUM_LEGS)]
 gait_divs = STEP_SIZE/STEP_SPEED
+
+HEAD_SPEAKING_SWEEP = 10.0
+HEAD_SPEAKING_SPEED = 1.5
+
+speaking_animation = [[90.0, 90.0], [90.0 - HEAD_SPEAKING_SWEEP, 90.0], [90, 90.0], [90.0 + HEAD_SPEAKING_SWEEP, 90.0]]
+speaking_animation_states = [0, 0]
+speaking_animation_dest = [speaking_animation_states[i] + 1 for i in range(NUM_HEAD_SERVOS)]
+speaking_animation_src = [speaking_animation_states[i] for i in range(NUM_HEAD_SERVOS)]
+speaking_animation_pos = [speaking_animation_src[i] for i in range(NUM_HEAD_SERVOS)]
+speaking_animation_divs = HEAD_SPEAKING_SWEEP/HEAD_SPEAKING_SPEED
 
 servo_channels = [[0, 1, 2], [4, 5, 6], [8, 9, 10], [12, 13, 14], [3, 7]] # leg component order: [foot, knee, shoulder] head component order: [head, neck]
 # servo_neutral_vals = [[90, 90, 90], [90, 90, 90], [90, 90, 90], [90, 90, 90]]
