@@ -200,7 +200,14 @@ def loop(interval):
             gait_vel = vector.scalar_div(vector.sub(gait_dest[i], gait_src[i]), gait_divs)
             gait_pos[i] = vector.add(gait_pos[i], gait_vel)
             move_ik(i, gait_pos[i], rot)
-    	curses_log(str(gait_pos))      
+    	curses_log(str(gait_pos))
+
+    if gait_grounded:
+        for i in range(NUM_HEAD_SERVOS):
+            write_servo(servo_channels[-1][i], head_gait[0][i])
+    else:
+        for i in range(NUM_HEAD_SERVOS):
+            write_servo(servo_channels[-1][i], head_gait[-1][i])
 
     if speaking["play"] and speaking["current_time"] - speaking["start_time"] < speaking["duration"]:
         speaking["current_time"] = time.time()

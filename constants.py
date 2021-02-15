@@ -45,12 +45,23 @@ gait_divs = STEP_SIZE/STEP_SPEED
 HEAD_SPEAKING_SWEEP = 7.0
 HEAD_SPEAKING_SPEED = 1.0
 
-speaking_animation = [[90.0, 90.0], [90.0 - HEAD_SPEAKING_SWEEP, 90.0], [90, 90.0], [90.0 + HEAD_SPEAKING_SWEEP, 90.0]]
+speaking_animation = [[90.0, 90.0], [90.0 - HEAD_SPEAKING_SWEEP, 90.0], [90, 90.0], [90.0 + HEAD_SPEAKING_SWEEP, 90.0]] # [A, B] angles for head servos
 speaking_animation_states = [0, 0]
 speaking_animation_dest = [speaking_animation[speaking_animation_states[i] + 1][i] for i in range(NUM_HEAD_SERVOS)]
 speaking_animation_src = [speaking_animation[speaking_animation_states[i]][i] for i in range(NUM_HEAD_SERVOS)]
 speaking_animation_pos = [speaking_animation_src[i] for i in range(NUM_HEAD_SERVOS)]
 speaking_animation_divs = HEAD_SPEAKING_SWEEP/HEAD_SPEAKING_SPEED
+
+HEAD_GAIT_SPEED = 7.0
+HEAD_GAIT_SPEED = 1.0
+
+head_gait = [[90, 90], [85, 85]]
+# head_gait = [[90.0, 90.0], [90.0 - HEAD_SPEAKING_SWEEP, 90.0], [90, 90.0], [90.0 + HEAD_SPEAKING_SWEEP, 90.0]] 
+# speaking_animation_states = [0, 0]
+# speaking_animation_dest = [speaking_animation[speaking_animation_states[i] + 1][i] for i in range(NUM_HEAD_SERVOS)]
+# speaking_animation_src = [speaking_animation[speaking_animation_states[i]][i] for i in range(NUM_HEAD_SERVOS)]
+# speaking_animation_pos = [speaking_animation_src[i] for i in range(NUM_HEAD_SERVOS)]
+# speaking_animation_divs = HEAD_SPEAKING_SWEEP/HEAD_SPEAKING_SPEED
 
 servo_channels = [[0, 1, 2], [4, 5, 6], [8, 9, 10], [12, 13, 14], [3, 7]] # leg component order: [foot, knee, shoulder] head component order: [head, neck]
 # servo_neutral_vals = [[90, 90, 90], [90, 90, 90], [90, 90, 90], [90, 90, 90]]
