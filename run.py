@@ -210,7 +210,7 @@ def loop(interval):
                 speaking_animation_pos[i] = speaking_animation_dest[i]
                 speaking_animation_src[i] = speaking_animation_dest
                 speaking_animation_states[i] = speaking_animation_states[i] + 1 if speaking_animation_states[i] + 1 < len(speaking_animation) else 0 
-                speaking_animation_dest = speaking_animation[speaking_animation_states[i]]
+                speaking_animation_dest[i] = speaking_animation[speaking_animation_states[i]]
 
             speaking_animation_vel = (speaking_animation_dest[i] - speaking_animation_src[i])/speaking_animation_divs
             speaking_animation_pos[i] += speaking_animation_vel
