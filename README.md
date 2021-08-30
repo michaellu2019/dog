@@ -1,5 +1,5 @@
 # Dog
-A quadruped robot built with a Raspbery Pi, Adafruit PCA9695 Servo Driver, 12 Hobbypark Servos, 2 SG90 Micro Servos, a Super Mini PAM8403 Audio Amplifier, and 2 MakerHawk Speakers. Woof!
+A quadruped robot built with a Raspbery Pi, Adafruit PCA9695 Servo Driver, 12 HobbyPark Servos, 2 SG90 Micro Servos, a Super Mini PAM8403 Audio Amplifier, and 2 MakerHawk Speakers. Woof!
 
 Footage:
 - https://youtu.be/aikBnfc7GT0
